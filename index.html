@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IncidePe + Certificado Joven — Desafío 17 CEPLAN · TransformaGob 2026</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+<style>
+  :root {
+    --green:#1D9E75; --green-dark:#0F6E56; --green-light:#E1F5EE; --green-border:#9FE1CB;
+    --amber:#EF9F27; --amber-light:#FAEEDA; --amber-dark:#633806;
+    --red:#E24B4A; --red-light:#FCEBEB; --red-dark:#791F1F;
+    --gray:#F7F7F5; --gray2:#EFEFED; --gray3:#D3D1C7; --gray4:#888780;
+    --text:#1a1a1a; --text2:#555; --text3:#888;
+    --radius:10px; --radius-sm:6px;
+    --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+    --mono:'Fira Mono','Cascadia Code',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:#F4F3F0;color:var(--text);min-height:100vh;}
+
+  /* NAV */
+  nav{background:var(--green-dark);color:white;padding:0 1.5rem;display:flex;align-items:center;gap:12px;height:56px;position:sticky;top:0;z-index:100;}
+  .logo{display:flex;align-items:center;gap:8px;}
+  .logo-oct{width:28px;height:28px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);background:white;display:flex;align-items:center;justify-content:center;}
+  .logo-text{font-size:16px;font-weight:600;letter-spacing:-0.3px;}
+  .logo-sub{font-size:11px;opacity:0.7;margin-top:1px;}
+  .nav-tabs{display:flex;gap:4px;margin-left:auto;}
+  .nav-tab{padding:6px 14px;border-radius:20px;border:none;background:transparent;color:rgba(255,255,255,0.7);font-size:13px;cursor:pointer;transition:all 0.15s;font-family:var(--font);}
+  .nav-tab.active,.nav-tab:hover{background:rgba(255,255,255,0.15);color:white;}
+  .nav-badge{font-size:9px;background:rgba(255,255,255,0.2);padding:2px 6px;border-radius:10px;margin-left:4px;}
+
+  /* LAYOUT */
+  .container{max-width:900px;margin:0 auto;padding:1.5rem 1rem 3rem;}
+  .section{display:none;}
+  .section.active{display:block;}
+
+  /* HERO */
+  .hero{background:var(--green-dark);color:white;padding:2.5rem 1.5rem;border-radius:var(--radius);margin-bottom:1.5rem;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);background:rgba(255,255,255,0.06);}
+  .hero::after{content:'';position:absolute;right:60px;bottom:-60px;width:140px;height:140px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);background:rgba(255,255,255,0.04);}
+  .hero-tag{font-size:11px;background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:14px;letter-spacing:0.5px;}
+  .hero h1{font-size:clamp(22px,4vw,32px);font-weight:700;letter-spacing:-0.5px;margin-bottom:10px;line-height:1.2;}
+  .hero p{font-size:14px;opacity:0.8;line-height:1.6;max-width:520px;margin-bottom:1.5rem;}
+  .hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .hero-pill{font-size:11px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);padding:5px 12px;border-radius:20px;}
+  .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.5rem;}
+  .stat-card{background:white;border-radius:var(--radius);padding:1rem;text-align:center;border:1px solid var(--gray3);}
+  .stat-num{font-size:28px;font-weight:700;color:var(--green);margin-bottom:2px;}
+  .stat-label{font-size:11px;color:var(--text2);line-height:1.4;}
+
+  /* CARDS */
+  .card{background:white;border-radius:var(--radius);border:1px solid var(--gray3);padding:1.25rem;}
+  .card+.card{margin-top:12px;}
+  .card-title{font-size:14px;font-weight:600;margin-bottom:4px;color:var(--text);}
+  .card-sub{font-size:12px;color:var(--text2);margin-bottom:1rem;line-height:1.5;}
+
+  /* BADGES */
+  .badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-block;}
+  .badge-green{background:var(--green-light);color:var(--green-dark);}
+  .badge-amber{background:var(--amber-light);color:var(--amber-dark);}
+  .badge-red{background:var(--red-light);color:var(--red-dark);}
+  .badge-gray{background:var(--gray2);color:var(--text2);}
+
+  /* WHATSAPP */
+  .wa-device{background:var(--gray2);border-radius:var(--radius);padding:1rem;max-width:420px;margin:0 auto;}
+  .wa-header{background:#075E54;color:white;border-radius:var(--radius-sm) var(--radius-sm) 0 0;padding:10px 14px;display:flex;align-items:center;gap:10px;}
+  .wa-av{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .wa-nm{font-size:13px;font-weight:600;}
+  .wa-st{font-size:10px;opacity:0.75;}
+  .wa-body{background:#ECE5DD;padding:12px 10px;min-height:320px;display:flex;flex-direction:column;gap:8px;border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+  .bubble{max-width:82%;padding:9px 12px;border-radius:12px;font-size:12.5px;line-height:1.55;position:relative;}
+  .bubble.bot{background:white;border-radius:4px 12px 12px 12px;align-self:flex-start;box-shadow:0 1px 2px rgba(0,0,0,0.1);}
+  .bubble.user{background:#DCF8C6;border-radius:12px 4px 12px 12px;align-self:flex-end;box-shadow:0 1px 2px rgba(0,0,0,0.1);}
+  .bubble .ts{font-size:10px;color:#999;margin-top:4px;text-align:right;}
+  .bubble.bot .ts{text-align:left;}
+  .bubble .step-lbl{font-size:9px;font-weight:700;color:var(--green);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px;}
+  .bubble .law-tag{font-size:10px;background:var(--green-light);color:var(--green-dark);padding:3px 8px;border-radius:4px;display:inline-block;margin-top:5px;font-weight:600;}
+  .typing-dots{display:flex;gap:4px;align-items:center;padding:8px 12px;background:white;border-radius:4px 12px 12px 12px;align-self:flex-start;width:56px;}
+  .typing-dots span{width:7px;height:7px;background:#aaa;border-radius:50%;animation:bounce 1.2s infinite;}
+  .typing-dots span:nth-child(2){animation-delay:.2s;}
+  .typing-dots span:nth-child(3){animation-delay:.4s;}
+  @keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+  .wa-input-row{display:flex;gap:8px;margin-top:10px;align-items:center;}
+  .wa-input-row input{flex:1;padding:9px 14px;border-radius:20px;border:1px solid var(--gray3);font-size:12px;font-family:var(--font);outline:none;}
+  .wa-input-row input:focus{border-color:var(--green);}
+  .wa-send{width:38px;height:38px;border-radius:50%;background:var(--green);border:none;color:white;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+  .wa-reset{font-size:11px;color:var(--text3);background:none;border:1px solid var(--gray3);border-radius:20px;padding:5px 14px;cursor:pointer;margin-top:8px;font-family:var(--font);}
+  .wa-reset:hover{background:var(--gray2);}
+
+  /* TRACKER */
+  .tracker-id{font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:1rem;padding:8px 12px;background:var(--gray);border-radius:var(--radius-sm);border:1px solid var(--gray3);}
+  .track-steps{position:relative;padding-left:32px;}
+  .track-steps::before{content:'';position:absolute;left:12px;top:14px;bottom:14px;width:2px;background:var(--gray3);}
+  .t-step{position:relative;margin-bottom:1.5rem;}
+  .t-step:last-child{margin-bottom:0;}
+  .t-dot{position:absolute;left:-26px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;top:0;z-index:1;}
+  .t-dot.done{background:var(--green);color:white;}
+  .t-dot.active{background:var(--amber);color:white;box-shadow:0 0 0 4px rgba(239,159,39,0.2);}
+  .t-dot.pending{background:white;color:var(--text3);border:2px solid var(--gray3);}
+  .t-head{font-size:13px;font-weight:600;margin-bottom:3px;}
+  .t-head.done{color:var(--green-dark);}
+  .t-head.active{color:var(--amber-dark);}
+  .t-head.pending{color:var(--text3);}
+  .t-body{font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:5px;}
+  .share-btn{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:var(--radius-sm);border:1px solid var(--gray3);background:white;font-size:13px;font-family:var(--font);color:var(--text);cursor:pointer;width:100%;margin-top:8px;transition:background 0.15s;}
+  .share-btn:hover{background:var(--gray);}
+  .si{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;color:white;}
+  .share-card{background:var(--green-dark);color:white;border-radius:var(--radius);padding:1.25rem;margin-top:10px;}
+  .share-card .sc-tag{font-size:9px;opacity:0.65;letter-spacing:0.8px;margin-bottom:6px;}
+  .share-card .sc-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+  .share-card .sc-body{font-size:11px;opacity:0.82;line-height:1.55;margin-bottom:12px;}
+  .share-card .sc-tags{font-size:10px;opacity:0.65;}
+
+  /* OCTÓGONOS */
+  .formula{background:var(--gray);border-radius:var(--radius-sm);padding:10px 14px;font-family:var(--mono);font-size:13px;border:1px dashed var(--gray3);margin-bottom:1rem;}
+  .ind-grid{display:grid;gap:0;}
+  .ind-row{display:grid;grid-template-columns:56px 1fr 110px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--gray2);}
+  .ind-row:last-child{border-bottom:none;}
+  .ind-code{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--green);}
+  .ind-name{font-size:12px;color:var(--text2);}
+  .ind-ctrl{display:flex;align-items:center;gap:6px;}
+  .ind-ctrl input{width:72px;accent-color:var(--green);}
+  .ind-val{font-size:12px;font-weight:600;min-width:32px;text-align:right;color:var(--text);}
+  .iaj-box{text-align:center;padding:1.5rem;border-radius:var(--radius);border:1px solid var(--gray3);margin:1rem 0;}
+  .iaj-num{font-size:52px;font-weight:800;letter-spacing:-2px;margin-bottom:4px;}
+  .iaj-lbl{font-size:12px;color:var(--text2);margin-bottom:12px;}
+  .iaj-oct{display:inline-block;font-size:13px;font-weight:600;padding:8px 20px;border-radius:20px;margin-bottom:8px;}
+  .iaj-reason{font-size:12px;color:var(--text2);line-height:1.5;max-width:400px;margin:0 auto;}
+  .oct-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:1rem;}
+  .oct-item{text-align:center;padding:1rem;border-radius:var(--radius);border:1px solid var(--gray3);background:white;}
+  .oct-shape{width:64px;height:64px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;text-align:center;line-height:1.3;color:white;padding:8px;}
+  .oct-item-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
+  .oct-item-cond{font-size:10px;color:var(--text2);}
+
+  /* CODE */
+  .code-tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap;}
+  .code-tab{padding:6px 14px;border-radius:20px;border:1px solid var(--gray3);background:white;font-size:12px;cursor:pointer;font-family:var(--font);color:var(--text2);}
+  .code-tab.active{background:var(--text);color:white;border-color:var(--text);}
+  .code-panel{display:none;}
+  .code-panel.active{display:block;}
+  .code-block{background:#1e1e2e;color:#cdd6f4;border-radius:var(--radius);padding:1.25rem;font-family:var(--mono);font-size:12px;line-height:1.7;overflow-x:auto;white-space:pre;}
+  .kw{color:#cba6f7;} .fn{color:#89dceb;} .st{color:#a6e3a1;} .cm{color:#6c7086;} .nm{color:#89b4fa;} .dc{color:#f38ba8;}
+  .copy-row{display:flex;justify-content:flex-end;margin-bottom:6px;}
+  .copy-btn{font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--gray3);background:white;cursor:pointer;font-family:var(--font);color:var(--text2);}
+  .copy-btn:hover{background:var(--gray);}
+
+  /* ARCH */
+  .arch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;}
+  .arch-card{background:white;border-radius:var(--radius);border:1px solid var(--gray3);padding:1rem;}
+  .arch-icon{font-size:24px;margin-bottom:8px;}
+  .arch-name{font-size:13px;font-weight:600;margin-bottom:4px;}
+  .arch-desc{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:8px;}
+  .arch-tech{display:flex;flex-wrap:wrap;gap:4px;}
+  .tech-pill{font-size:9px;background:var(--gray);border-radius:4px;padding:2px 7px;color:var(--text2);font-family:var(--mono);}
+
+  /* RESPONSIVE */
+  @media(max-width:600px){
+    .nav-tabs .nav-tab span{display:none;}
+    .hero h1{font-size:20px;}
+    .stats-row{grid-template-columns:repeat(2,1fr);}
+  }
+
+  /* SECTION TITLE */
+  .sec-title{font-size:18px;font-weight:700;margin-bottom:4px;}
+  .sec-desc{font-size:13px;color:var(--text2);margin-bottom:1.25rem;line-height:1.6;}
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-oct"></div>
+    <div>
+      <div class="logo-text">IncidePe</div>
+      <div class="logo-sub">+ Certificado Joven</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('inicio',this)">🏠 <span>Inicio</span></button>
+    <button class="nav-tab" onclick="showSection('chatbot',this)">💬 <span>Chatbot</span></button>
+    <button class="nav-tab" onclick="showSection('tracker',this)">📍 <span>Tracker</span></button>
+    <button class="nav-tab" onclick="showSection('octogonos',this)">🏆 <span>Octógonos</span></button>
+    <button class="nav-tab" onclick="showSection('codigo',this)">💻 <span>Código</span></button>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- INICIO -->
+  <div id="sec-inicio" class="section active">
+    <div class="hero">
+      <div class="hero-tag">🏆 HACKATHON TRANSFORMAGOB 2026 · DESAFÍO 17 CEPLAN</div>
+      <h1>Voz joven sin barreras:<br>del tiempo muerto a la política pública</h1>
+      <p>Sistema modular y omnicanal que intercepta a jóvenes de 18–25 años en las estaciones del Metro de Lima para convertir sus testimonios en incidencia ciudadana real, trazable y con respaldo legal.</p>
+      <div class="hero-pills">
+        <span class="hero-pill">📱 Chatbot WhatsApp</span>
+        <span class="hero-pill">🔍 Motor IA Semántico</span>
+        <span class="hero-pill">📍 Tracker Ciudadano</span>
+        <span class="hero-pill">🏆 Ranking por Octógonos</span>
+        <span class="hero-pill">⚖️ Ley N.º 29733 + 26300</span>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Estaciones piloto<br>Bayóvar · Villa El Salvador</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">18–25</div>
+        <div class="stat-label">Rango etario<br>jóvenes no organizados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Estados de<br>trazabilidad en tiempo real</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">MIT</div>
+        <div class="stat-label">Licencia de código<br>DL 1412 Art. 29</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-title">¿Cómo funciona?</div>
+      <div class="card-sub">Flujo completo en 4 pasos, desde el QR en la estación hasta la política pública</div>
+      <div class="arch-grid">
+        <div class="arch-card">
+          <div class="arch-icon">📱</div>
+          <div class="arch-name">1. Ingesta QR → WhatsApp</div>
+          <div class="arch-desc">El joven escanea un QR en la estación. Se activa un Deep Link que abre WhatsApp con el chatbot IncidePe, sin descargar ninguna app.</div>
+          <div class="arch-tech"><span class="tech-pill">WhatsApp API</span><span class="tech-pill">QR Code</span><span class="tech-pill">Deep Link</span></div>
+        </div>
+        <div class="arch-card">
+          <div class="arch-icon">🔍</div>
+          <div class="arch-name">2. Pipeline semántico IA</div>
+          <div class="arch-desc">El testimonio pasa por anonimización (Ley 29733), clasificación en ejes CEPLAN y vinculación normativa (Ley 26300) de forma automática.</div>
+          <div class="arch-tech"><span class="tech-pill">Python NER</span><span class="tech-pill">Regex PII</span><span class="tech-pill">NLP</span></div>
+        </div>
+        <div class="arch-card">
+          <div class="arch-icon">📍</div>
+          <div class="arch-name">3. Tracker de incidencia</div>
+          <div class="arch-desc">El usuario recibe un link único con un tracker estilo "delivery" que muestra en qué estado está su aporte en tiempo real.</div>
+          <div class="arch-tech"><span class="tech-pill">PWA</span><span class="tech-pill">WebSocket</span><span class="tech-pill">REST API</span></div>
+        </div>
+        <div class="arch-card">
+          <div class="arch-icon">🏆</div>
+          <div class="arch-name">4. Ranking por Octógonos</div>
+          <div class="arch-desc">El IAJ de cada institución se calcula con 4 indicadores. El octógono se activa en GOB.PE como sello verde (logro) o rojo (sanción).</div>
+          <div class="arch-tech"><span class="tech-pill">Dashboard</span><span class="tech-pill">IAJ Formula</span><span class="tech-pill">GOB.PE API</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Equipo y marco legal</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
+        <span class="badge badge-green">⚖️ Ley N.º 29733 – Protección de Datos</span>
+        <span class="badge badge-green">⚖️ Ley N.º 26300 – Participación Ciudadana</span>
+        <span class="badge badge-green">⚙️ DL 1412 Art. 29 – Software Público</span>
+        <span class="badge badge-gray">📋 CEPLAN – Guía Políticas Nacionales</span>
+        <span class="badge badge-gray">🚇 Línea 1 Metro Lima – Estaciones piloto</span>
+        <span class="badge badge-gray">🔓 Licencia MIT</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHATBOT -->
+  <div id="sec-chatbot" class="section">
+    <div class="sec-title">Simulación: Chatbot WhatsApp</div>
+    <div class="sec-desc">Arquetipo: Vanessa, 22 años, viaja desde Estación Villa El Salvador. Escanea el QR en la estación y comienza la conversación.</div>
+
+    <div class="wa-device">
+      <div class="wa-header">
+        <div class="wa-av">🏛️</div>
+        <div>
+          <div class="wa-nm">IncidePe Oficial</div>
+          <div class="wa-st">✓ Verificado · CEPLAN + PCM</div>
+        </div>
+      </div>
+      <div class="wa-body" id="chat-messages"></div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:10px;max-width:420px;margin-left:auto;margin-right:auto;">
+      <input id="user-input" type="text" placeholder="Escribe tu respuesta..." style="flex:1;padding:9px 14px;border-radius:20px;border:1px solid var(--gray3);font-size:12px;font-family:var(--font);" onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="wa-send" onclick="sendMsg()">➤</button>
+    </div>
+    <div style="text-align:center;margin-top:8px;">
+      <button class="wa-reset" onclick="resetChat()">↺ Reiniciar simulación</button>
+    </div>
+
+    <div class="card" style="margin-top:1rem;">
+      <div class="card-title">Reglas de UX del chatbot</div>
+      <ul style="font-size:12px;color:var(--text2);margin-top:8px;padding-left:1.2rem;line-height:2;">
+        <li>Cero lenguaje burocrático, formal o adultocentrista</li>
+        <li>Texto claro, cercano y empático — como habla un amigo</li>
+        <li>Acepta texto escrito o nota de voz de hasta 1 minuto</li>
+        <li>Detecta automáticamente la estación por el ID del QR escaneado</li>
+        <li>El pipeline de anonimización se activa en el mismo instante que llega el mensaje</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TRACKER -->
+  <div id="sec-tracker" class="section">
+    <div class="sec-title">Tracker de la incidencia</div>
+    <div class="sec-desc">Cada aporte tiene un ID único y un estado en tiempo real, como el rastreo de un pedido de delivery. El ciudadano nunca queda en el aire.</div>
+
+    <div class="card">
+      <div class="tracker-id">ID: INC-2026-VES-000847 · Estación Villa El Salvador · 14 jun 2026, 07:43</div>
+      <div class="track-steps">
+        <div class="t-step">
+          <div class="t-dot done">✓</div>
+          <div class="t-head done">Recibido y anonimizado</div>
+          <div class="t-body">Tu voz ya está en el sistema de forma segura. Tus datos personales han sido protegidos bajo la Ley N.º 29733.</div>
+          <span class="badge badge-green">Ley N.º 29733 Art. 13 · 14 jun 2026, 07:43</span>
+        </div>
+        <div class="t-step">
+          <div class="t-dot done">✓</div>
+          <div class="t-head done">Procesamiento semántico (IA)</div>
+          <div class="t-body">Nuestra IA analizó tu mensaje y lo clasificó en el eje temático: <strong>Transporte y Entorno Seguro</strong>. Macrozona: Lima Sur. Confianza: 94.2%.</div>
+          <span class="badge badge-green">Motor semántico CEPLAN · Fase 1: Diagnóstico</span>
+        </div>
+        <div class="t-step">
+          <div class="t-dot done">✓</div>
+          <div class="t-head done">Vinculación normativa (Ley 26300)</div>
+          <div class="t-body">Tu recomendación se unió al Expediente Colectivo de Lima Sur. Aportes acumulados en el eje: <strong>1,247</strong>. Categoría: Consulta Ciudadana Virtual Masiva.</div>
+          <span class="badge badge-green">Exp. N.º EXP-LSUR-2026-TES-003</span>
+        </div>
+        <div class="t-step">
+          <div class="t-dot active">⟳</div>
+          <div class="t-head active">En evaluación técnica</div>
+          <div class="t-body">Especialistas del Laboratorio Polilap de CEPLAN están contrastando este expediente en las mesas técnicas intersectoriales.</div>
+          <span class="badge badge-amber">En progreso · Mesa técnica 18 jun 2026</span>
+        </div>
+        <div class="t-step">
+          <div class="t-dot pending">5</div>
+          <div class="t-head pending">Incidencia efectiva</div>
+          <div class="t-body" style="color:var(--text3);">Tu recomendación será incorporada formalmente en la Matriz de Consistencia de la Política Nacional de Juventud (Objetivo Prioritario X).</div>
+          <span class="badge badge-gray">Pendiente</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div class="card-title">Compartir logro cívico</div>
+      <div class="card-sub">Exporta tu tarjeta de incidencia a redes sociales para incentivar la participación de otros jóvenes.</div>
+      <button class="share-btn" onclick="toggleShare()">
+        <div class="si" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">📷</div>
+        Compartir en Instagram Stories / TikTok
+      </button>
+      <div id="share-card" style="display:none;">
+        <div class="share-card" style="margin-top:10px;">
+          <div class="sc-tag">INCIDENCIA CIUDADANA · LIMA SUR · 2026</div>
+          <div class="sc-title">🏆 Mi voz cambió una política pública</div>
+          <div class="sc-body">Aporté al eje <strong>Transporte y Entorno Seguro</strong> desde la Estación Villa El Salvador. Mi recomendación forma parte del Expediente Colectivo de Lima Sur bajo la Ley N.º 26300.</div>
+          <div class="sc-tags">#IncidePe #CertificadoJoven #TransformaGob2026 #VozJovenSinBarreras</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OCTÓGONOS -->
+  <div id="sec-octogonos" class="section">
+    <div class="sec-title">Ranking de Octógonos — Índice IAJ</div>
+    <div class="sec-desc">Calcula el Índice de Apertura Juvenil (IAJ) de cualquier institución. El octógono se activa automáticamente en GOB.PE según las reglas de CEPLAN.</div>
+
+    <div class="card">
+      <div class="formula">IAJ = (TAP × 0.40) + (ITD × 0.20) + (DPP × 0.20) + (GSC × 0.20)</div>
+      <div class="ind-grid">
+        <div class="ind-row" style="border-bottom:1px solid var(--gray2);padding-bottom:6px;margin-bottom:4px;">
+          <div style="font-size:10px;font-weight:700;color:var(--text3);">CÓDIGO</div>
+          <div style="font-size:10px;font-weight:700;color:var(--text3);">DESCRIPCIÓN</div>
+          <div style="font-size:10px;font-weight:700;color:var(--text3);text-align:right;">VALOR</div>
+        </div>
+        <div class="ind-row">
+          <div class="ind-code">TAP</div>
+          <div class="ind-name">Tasa de Absorción de Propuestas (peso 40%)</div>
+          <div class="ind-ctrl"><input type="range" min="0" max="100" value="72" id="tap" oninput="calcIAJ()" step="1"><span class="ind-val" id="tap-v">72%</span></div>
+        </div>
+        <div class="ind-row">
+          <div class="ind-code">ITD</div>
+          <div class="ind-name">Índice de Trazabilidad y Devolución (peso 20%)</div>
+          <div class="ind-ctrl"><input type="range" min="0" max="100" value="58" id="itd" oninput="calcIAJ()" step="1"><span class="ind-val" id="itd-v">58%</span></div>
+        </div>
+        <div class="ind-row">
+          <div class="ind-code">DPP</div>
+          <div class="ind-name">Densidad de Participación Periférica (peso 20%)</div>
+          <div class="ind-ctrl"><input type="range" min="0" max="100" value="81" id="dpp" oninput="calcIAJ()" step="1"><span class="ind-val" id="dpp-v">81%</span></div>
+        </div>
+        <div class="ind-row">
+          <div class="ind-code">GSC</div>
+          <div class="ind-name">Grado de Satisfacción Ciudadana (peso 20%)</div>
+          <div class="ind-ctrl"><input type="range" min="0" max="100" value="65" id="gsc" oninput="calcIAJ()" step="1"><span class="ind-val" id="gsc-v">65%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="iaj-box" id="iaj-box">
+      <div class="iaj-num" id="iaj-num" style="color:var(--amber-dark);">70.8%</div>
+      <div class="iaj-lbl">Índice de Apertura Juvenil (IAJ)</div>
+      <div class="iaj-oct" id="iaj-oct" style="background:var(--amber-light);color:var(--amber-dark);">🟡 OCTÓGONO ÁMBAR: EN PROCESO DE MEJORA</div>
+      <div class="iaj-reason" id="iaj-reason">IAJ entre 50% y 84%. La institución avanza pero necesita mejorar la absorción de propuestas y la devolución de resultados.</div>
+    </div>
+
+    <div class="oct-legend">
+      <div class="oct-item">
+        <div class="oct-shape" style="background:#1D9E75;">ALTO EN PARTIC. EFECTIVA</div>
+        <div class="oct-item-name">Octógono Verde</div>
+        <div class="oct-item-cond">IAJ ≥ 85% → Certificado Joven</div>
+      </div>
+      <div class="oct-item">
+        <div class="oct-shape" style="background:var(--amber);">EN PROCESO DE MEJORA</div>
+        <div class="oct-item-name">Octógono Ámbar</div>
+        <div class="oct-item-cond">IAJ 50–84% → Observado</div>
+      </div>
+      <div class="oct-item">
+        <div class="oct-shape" style="background:var(--red);">EXCESO ADULTO-CENTRISMO</div>
+        <div class="oct-item-name">Octógono Rojo A</div>
+        <div class="oct-item-cond">IAJ &lt;50% + TAP&lt;15%</div>
+      </div>
+      <div class="oct-item">
+        <div class="oct-shape" style="background:var(--red);">BAJO EN TRAZABILIDAD</div>
+        <div class="oct-item-name">Octógono Rojo B</div>
+        <div class="oct-item-cond">ITD &lt; 30%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CÓDIGO -->
+  <div id="sec-codigo" class="section">
+    <div class="sec-title">Código backend</div>
+    <div class="sec-desc">Pipeline completo en Python. Licencia MIT — compatible con el Decreto Legislativo 1412 Art. 29 de Software Público Peruano.</div>
+
+    <div class="code-tabs">
+      <button class="code-tab active" onclick="showCode('anon',this)">anonymizer.py</button>
+      <button class="code-tab" onclick="showCode('cls',this)">classifier.py</button>
+      <button class="code-tab" onclick="showCode('iaj',this)">iaj_calculator.py</button>
+      <button class="code-tab" onclick="showCode('pipe',this)">pipeline.py</button>
+    </div>
+
+    <div id="code-anon" class="code-panel active">
+      <div class="copy-row"><button class="copy-btn" onclick="copyCode('code-anon-block')">Copiar</button></div>
+      <div class="code-block" id="code-anon-block"><span class="cm"># incidepe/anonymizer.py
+# MIT License — Hackathon TransformaGob 2026
+# Anonimización bajo Ley N.º 29733 Art. 13</span>
+
+<span class="kw">import</span> re
+<span class="kw">from</span> typing <span class="kw">import</span> TypedDict, List
+
+<span class="kw">class</span> <span class="fn">PIIRemoval</span>(TypedDict):
+    type: str
+    count: int
+
+<span class="kw">class</span> <span class="fn">AnonResult</span>(TypedDict):
+    anon_text: str
+    pii_removed: List[PIIRemoval]
+    law_compliance: str
+
+PATTERNS: dict[str, re.Pattern] = {
+    <span class="st">"phone"</span>:   re.compile(<span class="st">r'\b(\+51|0051)?[\s\-]?9\d{8}\b'</span>),
+    <span class="st">"dni"</span>:     re.compile(<span class="st">r'\b\d{8}\b'</span>),
+    <span class="st">"ruc"</span>:     re.compile(<span class="st">r'\b(10|20)\d{9}\b'</span>),
+    <span class="st">"address"</span>: re.compile(<span class="st">r'\b(jr\.?|av\.?|calle|mz\.?|lt\.?)\s+\w+'</span>, re.IGNORECASE),
+    <span class="st">"email"</span>:   re.compile(<span class="st">r'\b[\w._%+\-]+@[\w.\-]+\.[a-zA-Z]{2,}\b'</span>),
+}
+
+<span class="kw">def</span> <span class="fn">anonymize</span>(raw_text: str) -> AnonResult:
+    <span class="st">"""Elimina PII del testimonio según Ley N.º 29733."""</span>
+    cleaned = raw_text
+    removals: List[PIIRemoval] = []
+
+    <span class="kw">for</span> label, pattern <span class="kw">in</span> PATTERNS.items():
+        matches = pattern.findall(cleaned)
+        <span class="kw">if</span> matches:
+            removals.append({<span class="st">"type"</span>: label, <span class="st">"count"</span>: len(matches)})
+            cleaned = pattern.sub(
+                <span class="st">f"[{label.upper()}_REDACTED]"</span>, cleaned
+            )
+
+    <span class="kw">return</span> {
+        <span class="st">"anon_text"</span>: cleaned,
+        <span class="st">"pii_removed"</span>: removals,
+        <span class="st">"law_compliance"</span>: <span class="st">"Ley N.º 29733 Art. 13 — Datos Sensibles"</span>,
+    }</div>
+    </div>
+
+    <div id="code-cls" class="code-panel">
+      <div class="copy-row"><button class="copy-btn" onclick="copyCode('code-cls-block')">Copiar</button></div>
+      <div class="code-block" id="code-cls-block"><span class="cm"># incidepe/classifier.py
+# Clasificación semántica por ejes CEPLAN
+# MIT License — Hackathon TransformaGob 2026</span>
+
+<span class="kw">from</span> typing <span class="kw">import</span> TypedDict
+
+EJES: dict[str, list[str]] = {
+    <span class="st">"Transporte y Entorno Seguro"</span>: [
+        <span class="st">"metro","bus","combi","tráfico","pista","semáforo",
+        "accidente","mototaxi","paradero","seguridad vial","ruta"</span>],
+    <span class="st">"Empleo y Oportunidades"</span>: [
+        <span class="st">"trabajo","chamba","sueldo","empleo","contrato",
+        "prácticas","desempleo","empresa","freelance","oferta"</span>],
+    <span class="st">"Seguridad Ciudadana"</span>: [
+        <span class="st">"robo","delincuencia","asalto","policía","serenazgo",
+        "cámara","inseguridad","pandilla","vigilancia"</span>],
+    <span class="st">"Salud Mental y Bienestar"</span>: [
+        <span class="st">"estrés","ansiedad","depresión","psicólogo","salud",
+        "hospital","centro de salud","medicamento","terapia"</span>],
+    <span class="st">"Educación y Capacitación"</span>: [
+        <span class="st">"universidad","instituto","beca","estudiar","colegio",
+        "capacitación","taller","aprender","curso","egresado"</span>],
+}
+
+<span class="kw">class</span> <span class="fn">ClassResult</span>(TypedDict):
+    eje: str
+    confidence: float
+    all_scores: dict
+    ceplan_fase: str
+    ley_26300_cat: str
+
+<span class="kw">def</span> <span class="fn">classify_testimony</span>(anon_text: str) -> ClassResult:
+    <span class="st">"""Mapea testimonio a ejes temáticos CEPLAN con score de confianza."""</span>
+    scores = {}
+    text_lower = anon_text.lower()
+
+    <span class="kw">for</span> eje, keywords <span class="kw">in</span> EJES.items():
+        hits = sum(1 <span class="kw">for</span> kw <span class="kw">in</span> keywords <span class="kw">if</span> kw <span class="kw">in</span> text_lower)
+        <span class="kw">if</span> hits > 0:
+            scores[eje] = round(hits / len(keywords), 3)
+
+    <span class="kw">if not</span> scores:
+        <span class="kw">return</span> {
+            <span class="st">"eje"</span>: <span class="st">"Sin clasificar"</span>, <span class="st">"confidence"</span>: 0.0,
+            <span class="st">"all_scores"</span>: {}, <span class="st">"ceplan_fase"</span>: <span class="st">"Pendiente revisión manual"</span>,
+            <span class="st">"ley_26300_cat"</span>: <span class="st">"Pendiente"</span>
+        }
+
+    best = max(scores, key=scores.get)
+    <span class="kw">return</span> {
+        <span class="st">"eje"</span>: best,
+        <span class="st">"confidence"</span>: scores[best],
+        <span class="st">"all_scores"</span>: scores,
+        <span class="st">"ceplan_fase"</span>: <span class="st">"Fase 1 — Diagnóstico del Problema Público"</span>,
+        <span class="st">"ley_26300_cat"</span>: <span class="st">"Consulta Ciudadana Virtual Masiva"</span>,
+    }</div>
+    </div>
+
+    <div id="code-iaj" class="code-panel">
+      <div class="copy-row"><button class="copy-btn" onclick="copyCode('code-iaj-block')">Copiar</button></div>
+      <div class="code-block" id="code-iaj-block"><span class="cm"># incidepe/iaj_calculator.py
+# Índice de Apertura Juvenil + Sistema de Octógonos
+# MIT License — Hackathon TransformaGob 2026</span>
+
+<span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
+<span class="kw">from</span> enum <span class="kw">import</span> Enum
+
+<span class="kw">class</span> <span class="fn">Octogono</span>(Enum):
+    VERDE  = <span class="st">"VERDE: ALTO EN PARTICIPACIÓN EFECTIVA"</span>
+    ROJO_A = <span class="st">"ROJO: EXCESO DE ADULTOCENTRISMO"</span>
+    ROJO_B = <span class="st">"ROJO: BAJO EN TRAZABILIDAD"</span>
+    AMBAR  = <span class="st">"ÁMBAR: EN PROCESO DE MEJORA"</span>
+
+<span class="kw">@dataclass</span>
+<span class="kw">class</span> <span class="fn">IAJResult</span>:
+    tap: float
+    itd: float
+    dpp: float
+    gsc: float
+    iaj: float = <span class="nm">0.0</span>
+    octogono: Octogono = Octogono.AMBAR
+    certificado_joven: bool = <span class="nm">False</span>
+    razon: str = <span class="st">""</span>
+
+<span class="kw">def</span> <span class="fn">calcular_iaj</span>(
+    tap: float, itd: float,
+    dpp: float, gsc: float
+) -> IAJResult:
+    <span class="st">"""
+    Fórmula oficial IAJ:
+    IAJ = (TAP × 0.40) + (ITD × 0.20) + (DPP × 0.20) + (GSC × 0.20)
+    Todos los valores en porcentaje (0 a 100).
+    """</span>
+    iaj = (tap * <span class="nm">0.40</span>) + (itd * <span class="nm">0.20</span>) + (dpp * <span class="nm">0.20</span>) + (gsc * <span class="nm">0.20</span>)
+    result = IAJResult(tap=tap, itd=itd, dpp=dpp, gsc=gsc, iaj=round(iaj, <span class="nm">2</span>))
+
+    <span class="cm"># Reglas de activación — orden de prioridad estricto</span>
+    <span class="kw">if</span> itd < <span class="nm">30</span>:
+        result.octogono = Octogono.ROJO_B
+        result.razon = <span class="st">"ITD < 30%: sanción por no devolver resultados"</span>
+    <span class="kw">elif</span> iaj < <span class="nm">50</span> <span class="kw">and</span> tap < <span class="nm">15</span>:
+        result.octogono = Octogono.ROJO_A
+        result.razon = <span class="st">"IAJ < 50% y TAP < 15%: adultocentrismo activo"</span>
+    <span class="kw">elif</span> iaj >= <span class="nm">85</span>:
+        result.octogono = Octogono.VERDE
+        result.certificado_joven = <span class="nm">True</span>
+        result.razon = <span class="st">"Certificado Joven otorgado — destacado en GOB.PE"</span>
+    <span class="kw">else</span>:
+        result.octogono = Octogono.AMBAR
+        result.razon = <span class="st">"En proceso — mejorar TAP e ITD para alcanzar el verde"</span>
+
+    <span class="kw">return</span> result</div>
+    </div>
+
+    <div id="code-pipe" class="code-panel">
+      <div class="copy-row"><button class="copy-btn" onclick="copyCode('code-pipe-block')">Copiar</button></div>
+      <div class="code-block" id="code-pipe-block"><span class="cm"># incidepe/pipeline.py
+# Orquestador principal del sistema IncidePe
+# MIT License — Hackathon TransformaGob 2026</span>
+
+<span class="kw">import</span> uuid, datetime
+<span class="kw">from</span> .anonymizer <span class="kw">import</span> anonymize
+<span class="kw">from</span> .classifier <span class="kw">import</span> classify_testimony
+
+MACROZONAS = {
+    <span class="st">"QR_BAYOVAR"</span>: <span class="st">"Lima Este"</span>,
+    <span class="st">"QR_VES"</span>:     <span class="st">"Lima Sur"</span>,
+}
+
+<span class="kw">def</span> <span class="fn">run_pipeline</span>(
+    raw_text: str,
+    estacion_id: str,
+) -> dict:
+    <span class="st">"""
+    Pipeline completo:
+    1. Anonimiza PII (Ley 29733)
+    2. Clasifica por eje CEPLAN
+    3. Registra en macrozona correspondiente
+    4. Devuelve payload listo para tracker
+    """</span>
+    macrozona = MACROZONAS.get(estacion_id, <span class="st">"Lima Metropolitana"</span>)
+    anon = anonymize(raw_text)
+    cls  = classify_testimony(anon[<span class="st">"anon_text"</span>])
+    year = datetime.date.today().year
+    uid  = str(uuid.uuid4())[:6].upper()
+
+    <span class="kw">return</span> {
+        <span class="st">"incidencia_id"</span>:    <span class="st">f"INC-{year}-{estacion_id.replace('QR_','')}-{uid}"</span>,
+        <span class="st">"timestamp"</span>:        datetime.datetime.utcnow().isoformat() + <span class="st">"Z"</span>,
+        <span class="st">"estacion"</span>:         estacion_id,
+        <span class="st">"macrozona"</span>:        macrozona,
+        <span class="st">"anonimizacion"</span>:    anon,
+        <span class="st">"clasificacion"</span>:    cls,
+        <span class="st">"estado"</span>:           <span class="nm">1</span>,
+        <span class="st">"ley_26300_cat"</span>:    cls[<span class="st">"ley_26300_cat"</span>],
+        <span class="st">"tracker_url"</span>:      <span class="st">f"https://incidepe.gob.pe/tracker/INC-{year}-{uid}"</span>,
+    }
+
+<span class="cm"># --- Uso de ejemplo ---</span>
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    resultado = run_pipeline(
+        raw_text=<span class="st">"Los buses de la ruta 48 nunca paran en el paradero"</span>,
+        estacion_id=<span class="st">"QR_VES"</span>,
+    )
+    <span class="kw">import</span> json
+    print(json.dumps(resultado, ensure_ascii=<span class="nm">False</span>, indent=<span class="nm">2</span>))</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const FLOW = [
+  {t:'bot', text:'📍 <em style="color:#888;font-size:11px;">Sistema detecta QR_VES — Estación Villa El Salvador</em>', delay:0, step:'Activación por QR'},
+  {t:'bot', text:'¡Hola! Qué buena cola estás haciendo en la <b>Estación Villa El Salvador</b> 👋\n\nSi el tráfico te quita horas de tu vida, cuéntanos en un toque: ¿qué problema diario (transporte, seguridad, chamba) te friega más en tu zona y cómo lo mejorarías?\n\nEnvíanos un texto corto o una nota de voz de 1 min 🎤', delay:800, step:'Bienvenida contextual'},
+  {t:'user', text:'Oe, el problema es que los buses de la ruta 48 nunca paran en el paradero de la av. Heroes, siempre se pasan de largo. Deberían poner cámaras o multas a los choferes.', delay:2000, name:'Vanessa · 22 años'},
+  {t:'bot', text:'⚙️ <em style="color:#888;font-size:11px;">Procesando... anonimizando con Ley N.º 29733...</em>', delay:600, step:'Pipeline backend'},
+  {t:'bot', text:'¡Gracias, Vanessa! 🙌\n\nTu mensaje fue anonimizado y clasificado en el eje:\n<span class="law-tag">🚌 Transporte y Entorno Seguro</span>\n\nTu aporte se suma al Expediente Colectivo de <b>Lima Sur</b> bajo la Ley N.º 26300.\n\nDale estrellitas a tu experiencia (responde del 1 al 5):', delay:1400, step:'Clasificación IA + Ley 26300'},
+  {t:'user', text:'4 — bien fácil de usar 👍', delay:1200, name:'Vanessa · 22 años'},
+  {t:'bot', text:'¡Perfecto! 🎯 Registramos tu satisfacción (4/5).\n\nAquí tu link de seguimiento:\n👉 <b>incidepe.gob.pe/tracker/INC-2026-VES-000847</b>\n\nTe avisaremos aquí cuando tu aporte avance de estado. 🔔\n<span class="law-tag">✅ Tu voz está protegida y en camino 🇵🇪</span>', delay:1000, step:'Link tracker + cierre'},
+];
+
+let chat = document.getElementById('chat-messages');
+let playing = false;
+
+function addBubble(msg) {
+  const div = document.createElement('div');
+  const cls = msg.t === 'bot' ? 'bot' : 'user';
+  const name = msg.name ? `<div style="font-size:10px;color:#999;margin-bottom:2px;text-align:right;">${msg.name}</div>` : '';
+  const step = msg.step ? `<div class="step-lbl">${msg.step}</div>` : '';
+  const txt = msg.text.replace(/\n/g,'<br>');
+  const ts = new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+  div.innerHTML = `${msg.t==='user'?name:''}<div class="bubble ${cls}">${step}${txt}<div class="ts">${ts}</div></div>`;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function addTyping() {
+  const div = document.createElement('div');
+  div.className = 'typing-wrapper';
+  div.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+async function playFlow() {
+  if (playing) return;
+  playing = true;
+  for (let i = 0; i < FLOW.length; i++) {
+    await sleep(FLOW[i].delay);
+    if (FLOW[i].t === 'bot') {
+      const td = addTyping();
+      await sleep(900);
+      td.remove();
+    }
+    addBubble(FLOW[i]);
+  }
+  playing = false;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function sendMsg() {
+  const inp = document.getElementById('user-input');
+  const val = inp.value.trim();
+  if (!val) return;
+  addBubble({t:'user', text:val, name:'Tú'});
+  inp.value = '';
+  setTimeout(() => {
+    addBubble({t:'bot', text:'¡Gracias por tu aporte! 🙏 Ve al tab <b>Tracker</b> para seguir el estado de tu incidencia en tiempo real.', step:''});
+  }, 1100);
+}
+
+function resetChat() {
+  chat.innerHTML = '';
+  playing = false;
+  setTimeout(playFlow, 300);
+}
+
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'chatbot' && chat.children.length === 0) playFlow();
+}
+
+function toggleShare() {
+  const el = document.getElementById('share-card');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function calcIAJ() {
+  const tap = +document.getElementById('tap').value;
+  const itd = +document.getElementById('itd').value;
+  const dpp = +document.getElementById('dpp').value;
+  const gsc = +document.getElementById('gsc').value;
+  document.getElementById('tap-v').textContent = tap + '%';
+  document.getElementById('itd-v').textContent = itd + '%';
+  document.getElementById('dpp-v').textContent = dpp + '%';
+  document.getElementById('gsc-v').textContent = gsc + '%';
+  const iaj = (tap * 0.40) + (itd * 0.20) + (dpp * 0.20) + (gsc * 0.20);
+  const iajR = Math.round(iaj * 10) / 10;
+  const num = document.getElementById('iaj-num');
+  const oct = document.getElementById('iaj-oct');
+  const reason = document.getElementById('iaj-reason');
+  if (itd < 30) {
+    num.style.color = '#791F1F'; oct.style.background = '#FCEBEB'; oct.style.color = '#791F1F';
+    oct.textContent = '🔴 OCTÓGONO ROJO: BAJO EN TRAZABILIDAD';
+    reason.textContent = 'ITD por debajo del 30%. La institución no devuelve resultados. Sanción reputacional activada en GOB.PE.';
+  } else if (iaj < 50 && tap < 15) {
+    num.style.color = '#791F1F'; oct.style.background = '#FCEBEB'; oct.style.color = '#791F1F';
+    oct.textContent = '🔴 OCTÓGONO ROJO: EXCESO DE ADULTOCENTRISMO';
+    reason.textContent = 'IAJ < 50% y TAP < 15%. La institución ignora las demandas juveniles. Sanción pública activada.';
+  } else if (iaj >= 85) {
+    num.style.color = '#085041'; oct.style.background = '#E1F5EE'; oct.style.color = '#085041';
+    oct.textContent = '🟢 OCTÓGONO VERDE: ALTO EN PARTICIPACIÓN EFECTIVA';
+    reason.textContent = '¡Certificado Joven otorgado! Esta institución aparece destacada en GOB.PE como modelo de participación juvenil.';
+  } else {
+    num.style.color = '#633806'; oct.style.background = '#FAEEDA'; oct.style.color = '#633806';
+    oct.textContent = '🟡 OCTÓGONO ÁMBAR: EN PROCESO DE MEJORA';
+    reason.textContent = 'IAJ entre 50% y 84%. La institución avanza pero necesita mejorar la absorción de propuestas y la trazabilidad.';
+  }
+  num.textContent = iajR.toFixed(1) + '%';
+}
+
+function showCode(id, btn) {
+  document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('code-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function copyCode(id) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.innerText).then(() => {
+    const btn = el.previousElementSibling.querySelector('button');
+    btn.textContent = '✓ Copiado';
+    setTimeout(() => btn.textContent = 'Copiar', 2000);
+  });
+}
+
+calcIAJ();
+</script>
+</body>
+</html>
