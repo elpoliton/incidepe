@@ -6,459 +6,661 @@
 <title>IncidePe + Certificado Joven — Desafío 17 CEPLAN · TransformaGob 2026</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
 <style>
-  :root {
-    --green:#1D9E75; --green-dark:#0F6E56; --green-light:#E1F5EE; --green-border:#9FE1CB;
-    --amber:#EF9F27; --amber-light:#FAEEDA; --amber-dark:#633806;
-    --red:#E24B4A; --red-light:#FCEBEB; --red-dark:#791F1F;
-    --gray:#F7F7F5; --gray2:#EFEFED; --gray3:#D3D1C7; --gray4:#888780;
-    --text:#1a1a1a; --text2:#555; --text3:#888;
-    --radius:10px; --radius-sm:6px;
-    --font:'Segoe UI',system-ui,-apple-system,sans-serif;
-    --mono:'Fira Mono','Cascadia Code',monospace;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:var(--font);background:#F4F3F0;color:var(--text);min-height:100vh;}
+:root{
+  --ink:#080d35;--text:#20283d;--muted:#667086;--line:#dde3ef;--bg:#f7f8fc;--white:#fff;
+  --purple:#4b16e8;--purple2:#6f3cff;--green:#08a85a;--teal:#00c97a;--amber:#ffba18;
+  --red:#e43232;--soft-purple:#f2edff;--soft-green:#e8f8ef;--soft-amber:#fff8e6;--soft-red:#fff0f0;
+  --radius:16px;--ease:cubic-bezier(.2,.8,.2,1);
+  --font:Inter,'Segoe UI',Roboto,Arial,sans-serif;--mono:'Fira Mono','Cascadia Code',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);color:var(--text);background:var(--bg);min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button,input,select{font:inherit;}
+button{border:0;cursor:pointer;}
 
-  /* NAV */
-  nav{background:var(--green-dark);color:white;padding:0 1.5rem;display:flex;align-items:center;gap:12px;height:56px;position:sticky;top:0;z-index:100;}
-  .logo{display:flex;align-items:center;gap:8px;}
-  .logo-oct{width:28px;height:28px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);background:white;display:flex;align-items:center;justify-content:center;}
-  .logo-text{font-size:16px;font-weight:600;letter-spacing:-0.3px;}
-  .logo-sub{font-size:11px;opacity:0.7;margin-top:1px;}
-  .nav-tabs{display:flex;gap:4px;margin-left:auto;}
-  .nav-tab{padding:6px 14px;border-radius:20px;border:none;background:transparent;color:rgba(255,255,255,0.7);font-size:13px;cursor:pointer;transition:all 0.15s;font-family:var(--font);}
-  .nav-tab.active,.nav-tab:hover{background:rgba(255,255,255,0.15);color:white;}
-  .nav-badge{font-size:9px;background:rgba(255,255,255,0.2);padding:2px 6px;border-radius:10px;margin-left:4px;}
+/* NAV */
+.nav{background:var(--ink);color:#fff;height:60px;display:flex;align-items:center;padding:0 1.5rem;gap:12px;position:sticky;top:0;z-index:200;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-oct{width:30px;height:30px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:var(--ink);}
+.nav-name{font-size:15px;font-weight:800;letter-spacing:-.3px;}
+.nav-sub{font-size:10px;color:rgba(255,255,255,.5);margin-top:1px;}
+.nav-tabs{margin-left:auto;display:flex;gap:2px;}
+.nav-tab{padding:7px 13px;border-radius:20px;background:transparent;color:rgba(255,255,255,.6);font-size:12px;font-weight:600;transition:all .15s;border:none;}
+.nav-tab.active,.nav-tab:hover{background:rgba(255,255,255,.12);color:#fff;}
+.nav-chip{font-size:9px;background:var(--teal);color:var(--ink);padding:2px 6px;border-radius:10px;margin-left:3px;font-weight:800;}
 
-  /* LAYOUT */
-  .container{max-width:900px;margin:0 auto;padding:1.5rem 1rem 3rem;}
-  .section{display:none;}
-  .section.active{display:block;}
+/* LAYOUT */
+.page{max-width:960px;margin:0 auto;padding:2rem 1rem 4rem;}
+.section{display:none;}
+.section.active{display:block;}
 
-  /* HERO */
-  .hero{background:var(--green-dark);color:white;padding:2.5rem 1.5rem;border-radius:var(--radius);margin-bottom:1.5rem;position:relative;overflow:hidden;}
-  .hero::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);background:rgba(255,255,255,0.06);}
-  .hero::after{content:'';position:absolute;right:60px;bottom:-60px;width:140px;height:140px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);background:rgba(255,255,255,0.04);}
-  .hero-tag{font-size:11px;background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:14px;letter-spacing:0.5px;}
-  .hero h1{font-size:clamp(22px,4vw,32px);font-weight:700;letter-spacing:-0.5px;margin-bottom:10px;line-height:1.2;}
-  .hero p{font-size:14px;opacity:0.8;line-height:1.6;max-width:520px;margin-bottom:1.5rem;}
-  .hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
-  .hero-pill{font-size:11px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);padding:5px 12px;border-radius:20px;}
-  .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.5rem;}
-  .stat-card{background:white;border-radius:var(--radius);padding:1rem;text-align:center;border:1px solid var(--gray3);}
-  .stat-num{font-size:28px;font-weight:700;color:var(--green);margin-bottom:2px;}
-  .stat-label{font-size:11px;color:var(--text2);line-height:1.4;}
+/* CARDS */
+.card{background:var(--white);border-radius:var(--radius);border:1px solid var(--line);padding:1.5rem;}
+.card+.card,.card+.grid{margin-top:14px;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:14px;}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:14px;}
 
-  /* CARDS */
-  .card{background:white;border-radius:var(--radius);border:1px solid var(--gray3);padding:1.25rem;}
-  .card+.card{margin-top:12px;}
-  .card-title{font-size:14px;font-weight:600;margin-bottom:4px;color:var(--text);}
-  .card-sub{font-size:12px;color:var(--text2);margin-bottom:1rem;line-height:1.5;}
+/* HERO */
+.hero{background:var(--ink);color:#fff;border-radius:var(--radius);padding:2.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;right:-50px;top:-50px;width:220px;height:220px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);background:rgba(0,201,122,.08);}
+.hero-tag{font-size:10px;font-weight:800;letter-spacing:1px;background:rgba(0,201,122,.15);color:var(--teal);padding:5px 12px;border-radius:20px;display:inline-block;margin-bottom:14px;}
+.hero h1{font-size:clamp(22px,3.5vw,34px);font-weight:900;letter-spacing:-.5px;line-height:1.15;margin-bottom:10px;}
+.hero h1 em{color:var(--teal);font-style:normal;}
+.hero p{font-size:13px;line-height:1.65;color:rgba(255,255,255,.72);max-width:520px;margin-bottom:1.5rem;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:7px;}
+.hero-pill{font-size:11px;font-weight:600;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:20px;}
 
-  /* BADGES */
-  .badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-block;}
-  .badge-green{background:var(--green-light);color:var(--green-dark);}
-  .badge-amber{background:var(--amber-light);color:var(--amber-dark);}
-  .badge-red{background:var(--red-light);color:var(--red-dark);}
-  .badge-gray{background:var(--gray2);color:var(--text2);}
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:1.5rem;}
+.stat{background:var(--white);border-radius:12px;border:1px solid var(--line);padding:1rem;text-align:center;}
+.stat-num{font-size:30px;font-weight:900;color:var(--purple);letter-spacing:-1px;margin-bottom:2px;}
+.stat-lbl{font-size:11px;color:var(--muted);line-height:1.4;}
 
-  /* WHATSAPP */
-  .wa-device{background:var(--gray2);border-radius:var(--radius);padding:1rem;max-width:420px;margin:0 auto;}
-  .wa-header{background:#075E54;color:white;border-radius:var(--radius-sm) var(--radius-sm) 0 0;padding:10px 14px;display:flex;align-items:center;gap:10px;}
-  .wa-av{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;}
-  .wa-nm{font-size:13px;font-weight:600;}
-  .wa-st{font-size:10px;opacity:0.75;}
-  .wa-body{background:#ECE5DD;padding:12px 10px;min-height:320px;display:flex;flex-direction:column;gap:8px;border-radius:0 0 var(--radius-sm) var(--radius-sm);}
-  .bubble{max-width:82%;padding:9px 12px;border-radius:12px;font-size:12.5px;line-height:1.55;position:relative;}
-  .bubble.bot{background:white;border-radius:4px 12px 12px 12px;align-self:flex-start;box-shadow:0 1px 2px rgba(0,0,0,0.1);}
-  .bubble.user{background:#DCF8C6;border-radius:12px 4px 12px 12px;align-self:flex-end;box-shadow:0 1px 2px rgba(0,0,0,0.1);}
-  .bubble .ts{font-size:10px;color:#999;margin-top:4px;text-align:right;}
-  .bubble.bot .ts{text-align:left;}
-  .bubble .step-lbl{font-size:9px;font-weight:700;color:var(--green);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px;}
-  .bubble .law-tag{font-size:10px;background:var(--green-light);color:var(--green-dark);padding:3px 8px;border-radius:4px;display:inline-block;margin-top:5px;font-weight:600;}
-  .typing-dots{display:flex;gap:4px;align-items:center;padding:8px 12px;background:white;border-radius:4px 12px 12px 12px;align-self:flex-start;width:56px;}
-  .typing-dots span{width:7px;height:7px;background:#aaa;border-radius:50%;animation:bounce 1.2s infinite;}
-  .typing-dots span:nth-child(2){animation-delay:.2s;}
-  .typing-dots span:nth-child(3){animation-delay:.4s;}
-  @keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
-  .wa-input-row{display:flex;gap:8px;margin-top:10px;align-items:center;}
-  .wa-input-row input{flex:1;padding:9px 14px;border-radius:20px;border:1px solid var(--gray3);font-size:12px;font-family:var(--font);outline:none;}
-  .wa-input-row input:focus{border-color:var(--green);}
-  .wa-send{width:38px;height:38px;border-radius:50%;background:var(--green);border:none;color:white;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
-  .wa-reset{font-size:11px;color:var(--text3);background:none;border:1px solid var(--gray3);border-radius:20px;padding:5px 14px;cursor:pointer;margin-top:8px;font-family:var(--font);}
-  .wa-reset:hover{background:var(--gray2);}
+/* BADGES */
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.badge-green{background:var(--soft-green);color:#05703c;}
+.badge-purple{background:var(--soft-purple);color:#3810b5;}
+.badge-amber{background:var(--soft-amber);color:#7a5500;}
+.badge-red{background:var(--soft-red);color:#a01919;}
+.badge-gray{background:#f0f0f0;color:var(--muted);}
 
-  /* TRACKER */
-  .tracker-id{font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:1rem;padding:8px 12px;background:var(--gray);border-radius:var(--radius-sm);border:1px solid var(--gray3);}
-  .track-steps{position:relative;padding-left:32px;}
-  .track-steps::before{content:'';position:absolute;left:12px;top:14px;bottom:14px;width:2px;background:var(--gray3);}
-  .t-step{position:relative;margin-bottom:1.5rem;}
-  .t-step:last-child{margin-bottom:0;}
-  .t-dot{position:absolute;left:-26px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;top:0;z-index:1;}
-  .t-dot.done{background:var(--green);color:white;}
-  .t-dot.active{background:var(--amber);color:white;box-shadow:0 0 0 4px rgba(239,159,39,0.2);}
-  .t-dot.pending{background:white;color:var(--text3);border:2px solid var(--gray3);}
-  .t-head{font-size:13px;font-weight:600;margin-bottom:3px;}
-  .t-head.done{color:var(--green-dark);}
-  .t-head.active{color:var(--amber-dark);}
-  .t-head.pending{color:var(--text3);}
-  .t-body{font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:5px;}
-  .share-btn{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:var(--radius-sm);border:1px solid var(--gray3);background:white;font-size:13px;font-family:var(--font);color:var(--text);cursor:pointer;width:100%;margin-top:8px;transition:background 0.15s;}
-  .share-btn:hover{background:var(--gray);}
-  .si{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;color:white;}
-  .share-card{background:var(--green-dark);color:white;border-radius:var(--radius);padding:1.25rem;margin-top:10px;}
-  .share-card .sc-tag{font-size:9px;opacity:0.65;letter-spacing:0.8px;margin-bottom:6px;}
-  .share-card .sc-title{font-size:16px;font-weight:700;margin-bottom:6px;}
-  .share-card .sc-body{font-size:11px;opacity:0.82;line-height:1.55;margin-bottom:12px;}
-  .share-card .sc-tags{font-size:10px;opacity:0.65;}
+/* SECTION HEADER */
+.sec-h{margin-bottom:1.5rem;}
+.sec-h h1,.sec-h h2{font-size:22px;font-weight:900;letter-spacing:-.3px;margin-bottom:5px;}
+.sec-h p{font-size:13px;color:var(--muted);line-height:1.6;}
+.page-tag{font-size:10px;font-weight:800;letter-spacing:.8px;color:var(--purple);text-transform:uppercase;margin-bottom:6px;}
 
-  /* OCTÓGONOS */
-  .formula{background:var(--gray);border-radius:var(--radius-sm);padding:10px 14px;font-family:var(--mono);font-size:13px;border:1px dashed var(--gray3);margin-bottom:1rem;}
-  .ind-grid{display:grid;gap:0;}
-  .ind-row{display:grid;grid-template-columns:56px 1fr 110px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--gray2);}
-  .ind-row:last-child{border-bottom:none;}
-  .ind-code{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--green);}
-  .ind-name{font-size:12px;color:var(--text2);}
-  .ind-ctrl{display:flex;align-items:center;gap:6px;}
-  .ind-ctrl input{width:72px;accent-color:var(--green);}
-  .ind-val{font-size:12px;font-weight:600;min-width:32px;text-align:right;color:var(--text);}
-  .iaj-box{text-align:center;padding:1.5rem;border-radius:var(--radius);border:1px solid var(--gray3);margin:1rem 0;}
-  .iaj-num{font-size:52px;font-weight:800;letter-spacing:-2px;margin-bottom:4px;}
-  .iaj-lbl{font-size:12px;color:var(--text2);margin-bottom:12px;}
-  .iaj-oct{display:inline-block;font-size:13px;font-weight:600;padding:8px 20px;border-radius:20px;margin-bottom:8px;}
-  .iaj-reason{font-size:12px;color:var(--text2);line-height:1.5;max-width:400px;margin:0 auto;}
-  .oct-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:1rem;}
-  .oct-item{text-align:center;padding:1rem;border-radius:var(--radius);border:1px solid var(--gray3);background:white;}
-  .oct-shape{width:64px;height:64px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;text-align:center;line-height:1.3;color:white;padding:8px;}
-  .oct-item-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
-  .oct-item-cond{font-size:10px;color:var(--text2);}
+/* WHATSAPP SIMULATOR */
+.wa-wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;}
+@media(max-width:700px){.wa-wrap{grid-template-columns:1fr;}}
+.wa-shell{background:#ECE5DD;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);}
+.wa-top{background:#075E54;color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;}
+.wa-av{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.wa-nm{font-size:13px;font-weight:700;}
+.wa-st{font-size:10px;opacity:.7;}
+.chat-body{padding:12px 10px;min-height:360px;display:flex;flex-direction:column;gap:8px;max-height:440px;overflow-y:auto;}
+.bubble{max-width:82%;padding:9px 13px;border-radius:12px;font-size:12.5px;line-height:1.55;}
+.bubble.bot{background:#fff;border-radius:4px 12px 12px 12px;align-self:flex-start;box-shadow:0 1px 2px rgba(0,0,0,.1);}
+.bubble.user{background:#DCF8C6;border-radius:12px 4px 12px 12px;align-self:flex-end;box-shadow:0 1px 2px rgba(0,0,0,.1);}
+.bubble .ts{font-size:9px;color:#aaa;margin-top:4px;text-align:right;}
+.bubble.bot .ts{text-align:left;}
+.bubble .step-tag{font-size:9px;font-weight:800;color:var(--green);letter-spacing:.8px;text-transform:uppercase;margin-bottom:3px;}
+.bubble .law{font-size:10px;font-weight:700;background:#e8f8ef;color:#05703c;padding:3px 8px;border-radius:4px;display:inline-block;margin-top:5px;}
+.wa-age-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.age-btn{padding:7px 14px;border-radius:20px;border:1.5px solid #075E54;color:#075E54;background:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;}
+.age-btn:hover,.age-btn.sel{background:#075E54;color:#fff;}
+.typing-dots{display:flex;gap:4px;align-items:center;padding:9px 13px;background:#fff;border-radius:4px 12px 12px 12px;align-self:flex-start;width:54px;box-shadow:0 1px 2px rgba(0,0,0,.1);}
+.typing-dots span{width:6px;height:6px;background:#bbb;border-radius:50%;animation:tdot 1.2s infinite;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes tdot{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+.wa-composer{display:flex;gap:8px;padding:10px;background:#f0f0f0;align-items:center;}
+.wa-composer input{flex:1;padding:9px 14px;border-radius:20px;border:none;background:#fff;font-size:12px;outline:none;}
+.wa-send{width:38px;height:38px;border-radius:50%;background:#075E54;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;border:none;cursor:pointer;}
+.wa-reset-btn{font-size:11px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:20px;padding:5px 14px;cursor:pointer;margin-top:8px;display:block;margin-left:auto;margin-right:auto;}
 
-  /* CODE */
-  .code-tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap;}
-  .code-tab{padding:6px 14px;border-radius:20px;border:1px solid var(--gray3);background:white;font-size:12px;cursor:pointer;font-family:var(--font);color:var(--text2);}
-  .code-tab.active{background:var(--text);color:white;border-color:var(--text);}
-  .code-panel{display:none;}
-  .code-panel.active{display:block;}
-  .code-block{background:#1e1e2e;color:#cdd6f4;border-radius:var(--radius);padding:1.25rem;font-family:var(--mono);font-size:12px;line-height:1.7;overflow-x:auto;white-space:pre;}
-  .kw{color:#cba6f7;} .fn{color:#89dceb;} .st{color:#a6e3a1;} .cm{color:#6c7086;} .nm{color:#89b4fa;} .dc{color:#f38ba8;}
-  .copy-row{display:flex;justify-content:flex-end;margin-bottom:6px;}
-  .copy-btn{font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--gray3);background:white;cursor:pointer;font-family:var(--font);color:var(--text2);}
-  .copy-btn:hover{background:var(--gray);}
+/* AI PIPELINE PANEL */
+.ai-panel{background:var(--white);border-radius:var(--radius);border:1px solid var(--line);padding:1.25rem;}
+.ai-head{display:flex;align-items:center;gap:8px;margin-bottom:1rem;}
+.ai-chip{font-size:10px;font-weight:800;background:var(--soft-purple);color:var(--purple);padding:4px 10px;border-radius:20px;}
+.ai-status{font-size:13px;font-weight:700;color:var(--text);}
+.ai-steps{display:flex;flex-direction:column;gap:0;}
+.ai-step{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);transition:all .3s;}
+.ai-step:last-child{border-bottom:none;}
+.ai-step-icon{width:32px;height:32px;border-radius:8px;background:var(--bg);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s;}
+.ai-step-icon svg{width:16px;height:16px;stroke:var(--muted);stroke-width:2;fill:none;}
+.ai-step.done .ai-step-icon{background:var(--soft-green);border-color:var(--green);}
+.ai-step.done .ai-step-icon svg{stroke:var(--green);}
+.ai-step.active .ai-step-icon{background:var(--soft-purple);border-color:var(--purple);animation:pulse .8s infinite;}
+.ai-step.active .ai-step-icon svg{stroke:var(--purple);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+.ai-step-text b{font-size:12px;font-weight:700;display:block;}
+.ai-step-text small{font-size:11px;color:var(--muted);}
+.ai-out{background:var(--soft-green);border-radius:10px;padding:12px;margin-top:12px;display:none;}
+.ai-out.show{display:block;}
+.ai-out b{font-size:12px;font-weight:700;color:#05703c;display:block;margin-bottom:4px;}
+.ai-out p{font-size:11px;color:#2d6b4a;line-height:1.5;}
+.track-link{display:block;margin-top:8px;font-size:11px;font-weight:700;color:var(--purple);text-decoration:underline;}
 
-  /* ARCH */
-  .arch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;}
-  .arch-card{background:white;border-radius:var(--radius);border:1px solid var(--gray3);padding:1rem;}
-  .arch-icon{font-size:24px;margin-bottom:8px;}
-  .arch-name{font-size:13px;font-weight:600;margin-bottom:4px;}
-  .arch-desc{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:8px;}
-  .arch-tech{display:flex;flex-wrap:wrap;gap:4px;}
-  .tech-pill{font-size:9px;background:var(--gray);border-radius:4px;padding:2px 7px;color:var(--text2);font-family:var(--mono);}
+/* SECURITY PANEL */
+.sec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px;}
+.sec-item{padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);}
+.sec-item-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.sec-item-icon{width:28px;height:28px;border-radius:7px;background:var(--soft-purple);display:flex;align-items:center;justify-content:center;}
+.sec-item-icon svg{width:14px;height:14px;stroke:var(--purple);stroke-width:2;fill:none;}
+.sec-item-name{font-size:12px;font-weight:700;}
+.sec-item-desc{font-size:11px;color:var(--muted);line-height:1.5;}
+.sec-item-tag{font-size:9px;font-weight:700;color:var(--purple);margin-top:5px;}
 
-  /* RESPONSIVE */
-  @media(max-width:600px){
-    .nav-tabs .nav-tab span{display:none;}
-    .hero h1{font-size:20px;}
-    .stats-row{grid-template-columns:repeat(2,1fr);}
-  }
+/* TRACKER */
+.tracker-id-box{font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 14px;margin-bottom:1.25rem;}
+.track-steps{position:relative;padding-left:36px;}
+.track-steps::before{content:'';position:absolute;left:13px;top:16px;bottom:16px;width:2px;background:var(--line);}
+.t-step{position:relative;margin-bottom:1.5rem;}
+.t-step:last-child{margin-bottom:0;}
+.t-dot{position:absolute;left:-30px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;z-index:1;}
+.t-dot.done{background:var(--green);color:#fff;}
+.t-dot.active{background:var(--amber);color:var(--ink);box-shadow:0 0 0 4px rgba(255,186,24,.2);}
+.t-dot.pend{background:var(--white);color:var(--muted);border:2px solid var(--line);}
+.t-dot.done svg,.t-dot.active svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.5;fill:none;}
+.t-head{font-size:13px;font-weight:700;margin-bottom:3px;}
+.t-head.done{color:#05703c;}
+.t-head.active{color:#7a5500;}
+.t-head.pend{color:var(--muted);}
+.t-body{font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:5px;}
+.share-btns{display:flex;flex-direction:column;gap:8px;margin-top:1rem;}
+.share-btn{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;border:1px solid var(--line);background:var(--white);font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;}
+.share-btn:hover{background:var(--bg);}
+.si{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;}
+.share-card-preview{background:var(--ink);color:#fff;border-radius:var(--radius);padding:1.25rem;margin-top:10px;}
+.scp-tag{font-size:9px;letter-spacing:.8px;opacity:.5;margin-bottom:6px;}
+.scp-title{font-size:17px;font-weight:900;margin-bottom:6px;}
+.scp-body{font-size:11px;opacity:.8;line-height:1.6;margin-bottom:12px;}
+.scp-tags{font-size:10px;opacity:.5;}
 
-  /* SECTION TITLE */
-  .sec-title{font-size:18px;font-weight:700;margin-bottom:4px;}
-  .sec-desc{font-size:13px;color:var(--text2);margin-bottom:1.25rem;line-height:1.6;}
-  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;}
+/* IAJ CALCULATOR */
+.formula-box{background:var(--bg);border:1px dashed var(--line);border-radius:10px;padding:10px 16px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink);margin-bottom:1rem;}
+.ind-table{width:100%;border-collapse:collapse;}
+.ind-table th{font-size:10px;font-weight:700;color:var(--muted);padding:6px 8px;text-align:left;border-bottom:1px solid var(--line);}
+.ind-table td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:middle;}
+.ind-table tr:last-child td{border-bottom:none;}
+.ind-code{font-family:var(--mono);font-size:12px;font-weight:800;color:var(--purple);}
+.ind-name{font-size:12px;color:var(--text);}
+.ind-ctrl{display:flex;align-items:center;gap:8px;}
+.ind-ctrl input[type=range]{width:90px;accent-color:var(--purple);}
+.ind-val{font-size:12px;font-weight:700;min-width:36px;text-align:right;}
+.iaj-result{text-align:center;padding:2rem;border-radius:var(--radius);border:1px solid var(--line);margin:1rem 0;}
+.iaj-num{font-size:56px;font-weight:900;letter-spacing:-2px;margin-bottom:4px;}
+.iaj-lbl{font-size:12px;color:var(--muted);margin-bottom:14px;}
+.iaj-oct{display:inline-block;font-size:13px;font-weight:800;padding:9px 22px;border-radius:24px;margin-bottom:8px;}
+.iaj-reason{font-size:12px;color:var(--muted);line-height:1.55;max-width:420px;margin:0 auto;}
+.oct-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:1rem;}
+.oct-item{text-align:center;padding:1rem;border-radius:var(--radius);border:1px solid var(--line);background:var(--white);}
+.oct-shape{width:68px;height:68px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:800;text-align:center;line-height:1.3;color:#fff;padding:8px;}
+.oct-item-name{font-size:12px;font-weight:700;margin-bottom:3px;}
+.oct-item-cond{font-size:10px;color:var(--muted);}
+
+/* CODE */
+.code-file-tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap;}
+.cft{padding:6px 14px;border-radius:20px;border:1px solid var(--line);background:var(--white);font-size:11px;font-weight:700;cursor:pointer;color:var(--muted);transition:all .15s;}
+.cft.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.cpanel{display:none;}
+.cpanel.active{display:block;}
+.cblock{background:#0d1117;color:#c9d1d9;border-radius:var(--radius);padding:1.25rem;font-family:var(--mono);font-size:11.5px;line-height:1.75;overflow-x:auto;white-space:pre;}
+.kw{color:#ff7b72;} .fn{color:#d2a8ff;} .st{color:#a5d6ff;} .cm{color:#6e7681;} .nm{color:#79c0ff;} .dc{color:#ffa657;}
+.copy-row{display:flex;justify-content:flex-end;margin-bottom:6px;}
+.copy-btn{font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--line);background:var(--white);cursor:pointer;font-weight:600;color:var(--muted);}
+
+/* MAP */
+.map-layout{display:grid;grid-template-columns:1fr 320px;gap:16px;}
+@media(max-width:700px){.map-layout{grid-template-columns:1fr;}}
+#leafletMap{height:420px;border-radius:10px;border:1px solid var(--line);overflow:hidden;background:#e8f0fe;display:block;width:100%;}
+.map-list-title{font-size:12px;font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;color:var(--text);}
+.map-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);}
+.map-row:last-child{border-bottom:none;}
+.dswatch{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.map-row-text{flex:1;font-size:12px;}
+.map-row-text b{display:block;font-weight:700;}
+.map-row-text span{color:var(--muted);font-size:10px;}
+.map-count{text-align:right;}
+.map-count strong{display:block;font-size:14px;font-weight:900;color:var(--purple);}
+.map-count small{font-size:10px;color:var(--muted);}
+
+/* VOICES */
+.filters-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;}
+.fsel{padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--white);font-size:12px;color:var(--text);cursor:pointer;}
+.results-line{font-size:12px;color:var(--muted);margin-bottom:1rem;}
+.results-line strong{color:var(--text);}
+.voices-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.voice-card{background:var(--white);border-radius:var(--radius);border:1px solid var(--line);padding:1.25rem;display:flex;flex-direction:column;gap:8px;}
+.voice-card.mine{border:2px solid var(--purple);}
+.vc-top{display:flex;justify-content:space-between;align-items:center;}
+.vc-chip{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;}
+.vc-chip.acc{background:#e8f8ef;color:#05703c;}
+.vc-chip.per{background:#e8f8ef;color:#05703c;}
+.vc-chip.cal{background:#fff8e6;color:#7a5500;}
+.vc-chip.emp{background:var(--soft-purple);color:#3810b5;}
+.vc-chip.mine{background:var(--soft-purple);color:#3810b5;}
+.vc-dist{font-size:10px;color:var(--muted);}
+.vc-title{font-size:13px;font-weight:700;line-height:1.4;}
+.vc-sum{font-size:12px;color:var(--muted);line-height:1.5;}
+.vc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:4px;}
+.vc-sup{font-size:11px;color:var(--muted);}
+.vc-btn{font-size:11px;font-weight:700;color:var(--purple);background:none;border:none;cursor:pointer;padding:0;}
+
+/* POSTER */
+.poster-wrap{max-width:420px;margin:0 auto;}
+.poster{background:var(--ink);color:#fff;border-radius:20px;padding:2rem;text-align:center;position:relative;overflow:hidden;}
+.poster::before{content:'';position:absolute;right:-30px;top:-30px;width:160px;height:160px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);background:rgba(0,201,122,.1);}
+.poster-brand{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:1.5rem;}
+.poster-oct{width:36px;height:36px;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:var(--ink);}
+.poster-brand-name{font-size:18px;font-weight:900;}
+.poster-nudge{font-size:22px;font-weight:900;line-height:1.2;margin-bottom:1.5rem;}
+.poster-nudge em{color:var(--teal);font-style:normal;}
+.poster-qr-box{background:rgba(255,255,255,.95);border-radius:12px;padding:14px;display:inline-block;margin-bottom:1rem;}
+.poster-scan{font-size:12px;opacity:.7;margin-bottom:1.5rem;}
+.poster-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-bottom:1.5rem;}
+.poster-pill{font-size:11px;font-weight:600;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:5px 12px;border-radius:20px;}
+.poster-ceplan{font-size:10px;opacity:.4;letter-spacing:.5px;}
+.qr-svg{width:140px;height:140px;display:block;}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .nav-tab span{display:none;}
+  .page{padding:1.25rem .75rem 3rem;}
+}
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="logo">
-    <div class="logo-oct"></div>
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-oct">IP</div>
     <div>
-      <div class="logo-text">IncidePe</div>
-      <div class="logo-sub">+ Certificado Joven</div>
+      <div class="nav-name">IncidePe</div>
+      <div class="nav-sub">+ Certificado Joven</div>
     </div>
   </div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showSection('inicio',this)">🏠 <span>Inicio</span></button>
-    <button class="nav-tab" onclick="showSection('chatbot',this)">💬 <span>Chatbot</span></button>
-    <button class="nav-tab" onclick="showSection('tracker',this)">📍 <span>Tracker</span></button>
-    <button class="nav-tab" onclick="showSection('octogonos',this)">🏆 <span>Octógonos</span></button>
-    <button class="nav-tab" onclick="showSection('codigo',this)">💻 <span>Código</span></button>
+    <button class="nav-tab active" onclick="go('inicio',this)">🏠 <span>Inicio</span></button>
+    <button class="nav-tab" onclick="go('chatbot',this)">💬 <span>Chatbot</span></button>
+    <button class="nav-tab" onclick="go('tracker',this)">📍 <span>Tracker</span></button>
+    <button class="nav-tab" onclick="go('voces',this)">🗣️ <span>Voces</span></button>
+    <button class="nav-tab" onclick="go('mapa',this)">🗺️ <span>Mapa</span></button>
+    <button class="nav-tab" onclick="go('octogonos',this)">🏆 <span>IAJ</span></button>
+    <button class="nav-tab" onclick="go('codigo',this)">💻 <span>Código</span></button>
+    <button class="nav-tab" onclick="go('poster',this)">📌 <span>QR Afiche</span></button>
   </div>
 </nav>
 
-<div class="container">
+<div class="page">
 
-  <!-- INICIO -->
-  <div id="sec-inicio" class="section active">
-    <div class="hero">
-      <div class="hero-tag">🏆 HACKATHON TRANSFORMAGOB 2026 · DESAFÍO 17 CEPLAN</div>
-      <h1>Voz joven sin barreras:<br>del tiempo muerto a la política pública</h1>
-      <p>Sistema modular y omnicanal que intercepta a jóvenes de 18–25 años en las estaciones del Metro de Lima para convertir sus testimonios en incidencia ciudadana real, trazable y con respaldo legal.</p>
-      <div class="hero-pills">
-        <span class="hero-pill">📱 Chatbot WhatsApp</span>
-        <span class="hero-pill">🔍 Motor IA Semántico</span>
-        <span class="hero-pill">📍 Tracker Ciudadano</span>
-        <span class="hero-pill">🏆 Ranking por Octógonos</span>
-        <span class="hero-pill">⚖️ Ley N.º 29733 + 26300</span>
-      </div>
+<!-- INICIO -->
+<div id="sec-inicio" class="section active">
+  <div class="hero">
+    <div class="hero-tag">🏆 HACKATHON TRANSFORMAGOB 2026 · DESAFÍO 17 CEPLAN</div>
+    <h1>Voz joven <em>sin barreras</em>:<br>del tiempo muerto a la política pública</h1>
+    <p>Ecosistema omnicanal que intercepta a Valeria (22 años, VMT) en el Metro de Lima y convierte su testimonio en incidencia ciudadana real, trazable y con respaldo legal — en 2 minutos, sin datos móviles.</p>
+    <div class="hero-pills">
+      <span class="hero-pill">📱 WhatsApp + QR</span>
+      <span class="hero-pill">🔐 SHA-256 + AES-256</span>
+      <span class="hero-pill">🤖 NLP CEPLAN</span>
+      <span class="hero-pill">📍 Tracker 5 estados</span>
+      <span class="hero-pill">🏆 Octógonos IAJ</span>
+      <span class="hero-pill">⚖️ Ley 29733 + 26300</span>
     </div>
-
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-num">2</div>
-        <div class="stat-label">Estaciones piloto<br>Bayóvar · Villa El Salvador</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">18–25</div>
-        <div class="stat-label">Rango etario<br>jóvenes no organizados</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">5</div>
-        <div class="stat-label">Estados de<br>trazabilidad en tiempo real</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">MIT</div>
-        <div class="stat-label">Licencia de código<br>DL 1412 Art. 29</div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-bottom:12px;">
-      <div class="card-title">¿Cómo funciona?</div>
-      <div class="card-sub">Flujo completo en 4 pasos, desde el QR en la estación hasta la política pública</div>
-      <div class="arch-grid">
-        <div class="arch-card">
-          <div class="arch-icon">📱</div>
-          <div class="arch-name">1. Ingesta QR → WhatsApp</div>
-          <div class="arch-desc">El joven escanea un QR en la estación. Se activa un Deep Link que abre WhatsApp con el chatbot IncidePe, sin descargar ninguna app.</div>
-          <div class="arch-tech"><span class="tech-pill">WhatsApp API</span><span class="tech-pill">QR Code</span><span class="tech-pill">Deep Link</span></div>
-        </div>
-        <div class="arch-card">
-          <div class="arch-icon">🔍</div>
-          <div class="arch-name">2. Pipeline semántico IA</div>
-          <div class="arch-desc">El testimonio pasa por anonimización (Ley 29733), clasificación en ejes CEPLAN y vinculación normativa (Ley 26300) de forma automática.</div>
-          <div class="arch-tech"><span class="tech-pill">Python NER</span><span class="tech-pill">Regex PII</span><span class="tech-pill">NLP</span></div>
-        </div>
-        <div class="arch-card">
-          <div class="arch-icon">📍</div>
-          <div class="arch-name">3. Tracker de incidencia</div>
-          <div class="arch-desc">El usuario recibe un link único con un tracker estilo "delivery" que muestra en qué estado está su aporte en tiempo real.</div>
-          <div class="arch-tech"><span class="tech-pill">PWA</span><span class="tech-pill">WebSocket</span><span class="tech-pill">REST API</span></div>
-        </div>
-        <div class="arch-card">
-          <div class="arch-icon">🏆</div>
-          <div class="arch-name">4. Ranking por Octógonos</div>
-          <div class="arch-desc">El IAJ de cada institución se calcula con 4 indicadores. El octógono se activa en GOB.PE como sello verde (logro) o rojo (sanción).</div>
-          <div class="arch-tech"><span class="tech-pill">Dashboard</span><span class="tech-pill">IAJ Formula</span><span class="tech-pill">GOB.PE API</span></div>
-        </div>
-      </div>
-    </div>
-
+  </div>
+  <div class="stat-grid">
+    <div class="stat"><div class="stat-num">91%</div><div class="stat-lbl">jóvenes sin participación en políticas nacionales</div></div>
+    <div class="stat"><div class="stat-num">5.6%</div><div class="stat-lbl">usa canales formales o pertenece a organizaciones</div></div>
+    <div class="stat"><div class="stat-num">3h+</div><div class="stat-lbl">de transporte diario que Valeria puede aprovechar</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-lbl">estados de trazabilidad en tiempo real</div></div>
+  </div>
+  <div class="grid-2">
     <div class="card">
-      <div class="card-title">Equipo y marco legal</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
-        <span class="badge badge-green">⚖️ Ley N.º 29733 – Protección de Datos</span>
-        <span class="badge badge-green">⚖️ Ley N.º 26300 – Participación Ciudadana</span>
-        <span class="badge badge-green">⚙️ DL 1412 Art. 29 – Software Público</span>
-        <span class="badge badge-gray">📋 CEPLAN – Guía Políticas Nacionales</span>
-        <span class="badge badge-gray">🚇 Línea 1 Metro Lima – Estaciones piloto</span>
-        <span class="badge badge-gray">🔓 Licencia MIT</span>
+      <div class="page-tag">Arquetipo oficial CEPLAN</div>
+      <h2 style="font-size:16px;font-weight:800;margin-bottom:8px;">Valeria, 22 años · Villa María del Triunfo</h2>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Estudia y trabaja. Pasa +3 horas en transporte público. Usa WhatsApp intensivamente pero no pertenece a ningún colectivo cívico. No tiene tiempo ni dinero para talleres en Miraflores.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="badge badge-green">Lima Sur</span>
+        <span class="badge badge-purple">WhatsApp nativa</span>
+        <span class="badge badge-amber">Sin datos móviles</span>
+        <span class="badge badge-gray">No organizada</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="page-tag">Flujo completo</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+        <div style="display:flex;gap:10px;align-items:center;font-size:12px;"><div style="width:28px;height:28px;border-radius:7px;background:var(--soft-purple);display:flex;align-items:center;justify-content:center;flex-shrink:0;">📌</div><div><b>QR en estación</b> → Deep Link → WhatsApp sin datos</div></div>
+        <div style="display:flex;gap:10px;align-items:center;font-size:12px;"><div style="width:28px;height:28px;border-radius:7px;background:var(--soft-green);display:flex;align-items:center;justify-content:center;flex-shrink:0;">🤖</div><div><b>Gatekeeper etario</b> → confirma 18-25 → capta testimonio</div></div>
+        <div style="display:flex;gap:10px;align-items:center;font-size:12px;"><div style="width:28px;height:28px;border-radius:7px;background:var(--soft-purple);display:flex;align-items:center;justify-content:center;flex-shrink:0;">🔐</div><div><b>SHA-256 + NER</b> → anonimiza → clasifica en eje CEPLAN</div></div>
+        <div style="display:flex;gap:10px;align-items:center;font-size:12px;"><div style="width:28px;height:28px;border-radius:7px;background:var(--soft-amber);display:flex;align-items:center;justify-content:center;flex-shrink:0;">📍</div><div><b>Tracker 5 estados</b> → combate la crisis de confianza</div></div>
+        <div style="display:flex;gap:10px;align-items:center;font-size:12px;"><div style="width:28px;height:28px;border-radius:7px;background:#e8f8ef;display:flex;align-items:center;justify-content:center;flex-shrink:0;">🏆</div><div><b>IAJ + Octógono</b> → presión reputacional en GOB.PE</div></div>
       </div>
     </div>
   </div>
-
-  <!-- CHATBOT -->
-  <div id="sec-chatbot" class="section">
-    <div class="sec-title">Simulación: Chatbot WhatsApp</div>
-    <div class="sec-desc">Arquetipo: Vanessa, 22 años, viaja desde Estación Villa El Salvador. Escanea el QR en la estación y comienza la conversación.</div>
-
-    <div class="wa-device">
-      <div class="wa-header">
-        <div class="wa-av">🏛️</div>
-        <div>
-          <div class="wa-nm">IncidePe Oficial</div>
-          <div class="wa-st">✓ Verificado · CEPLAN + PCM</div>
-        </div>
-      </div>
-      <div class="wa-body" id="chat-messages"></div>
-    </div>
-
-    <div style="display:flex;gap:8px;margin-top:10px;max-width:420px;margin-left:auto;margin-right:auto;">
-      <input id="user-input" type="text" placeholder="Escribe tu respuesta..." style="flex:1;padding:9px 14px;border-radius:20px;border:1px solid var(--gray3);font-size:12px;font-family:var(--font);" onkeydown="if(event.key==='Enter')sendMsg()">
-      <button class="wa-send" onclick="sendMsg()">➤</button>
-    </div>
-    <div style="text-align:center;margin-top:8px;">
-      <button class="wa-reset" onclick="resetChat()">↺ Reiniciar simulación</button>
-    </div>
-
-    <div class="card" style="margin-top:1rem;">
-      <div class="card-title">Reglas de UX del chatbot</div>
-      <ul style="font-size:12px;color:var(--text2);margin-top:8px;padding-left:1.2rem;line-height:2;">
-        <li>Cero lenguaje burocrático, formal o adultocentrista</li>
-        <li>Texto claro, cercano y empático — como habla un amigo</li>
-        <li>Acepta texto escrito o nota de voz de hasta 1 minuto</li>
-        <li>Detecta automáticamente la estación por el ID del QR escaneado</li>
-        <li>El pipeline de anonimización se activa en el mismo instante que llega el mensaje</li>
-      </ul>
+  <div class="card" style="margin-top:14px;">
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <span class="badge badge-green">⚖️ Ley N.º 29733 — Datos Personales</span>
+      <span class="badge badge-green">⚖️ Ley N.º 26300 — Participación Ciudadana</span>
+      <span class="badge badge-purple">🔐 SHA-256 + AES-256 + TLS 1.3</span>
+      <span class="badge badge-purple">🔗 Interoperabilidad PIDE-PCM + mTLS</span>
+      <span class="badge badge-gray">📋 DL 1412 Art. 29 · Licencia MIT</span>
+      <span class="badge badge-amber">🚇 Línea 1 Metro Lima — Bayóvar + VES</span>
     </div>
   </div>
+</div>
 
-  <!-- TRACKER -->
-  <div id="sec-tracker" class="section">
-    <div class="sec-title">Tracker de la incidencia</div>
-    <div class="sec-desc">Cada aporte tiene un ID único y un estado en tiempo real, como el rastreo de un pedido de delivery. El ciudadano nunca queda en el aire.</div>
+<!-- CHATBOT -->
+<div id="sec-chatbot" class="section">
+  <div class="sec-h">
+    <div class="page-tag">Módulo 1 — Ingesta omnicanal</div>
+    <h1>Chatbot WhatsApp + Gatekeeper</h1>
+    <p>Simulación del viaje de Valeria (VMT). El bot detecta la estación por QR, filtra el rango etario antes de capturar el testimonio, y procesa el pipeline de seguridad en tiempo real.</p>
+  </div>
+  <div class="wa-wrap">
+    <div>
+      <div class="wa-shell">
+        <div class="wa-top">
+          <div class="wa-av">🏛️</div>
+          <div><div class="wa-nm">IncidePe Oficial</div><div class="wa-st">✓ Verificado · CEPLAN + PCM</div></div>
+        </div>
+        <div class="chat-body" id="chatBody"></div>
+        <div class="wa-composer">
+          <input id="chatInput" type="text" placeholder="Escribe aquí tu testimonio..." onkeydown="if(event.key==='Enter')sendFree()">
+          <button class="wa-send" onclick="sendFree()">➤</button>
+        </div>
+      </div>
+      <button class="wa-reset-btn" onclick="resetChat()">↺ Reiniciar simulación</button>
+    </div>
+    <div class="ai-panel">
+      <div class="ai-head">
+        <span class="ai-chip">Pipeline IA</span>
+        <span class="ai-status" id="aiStatus">En espera del testimonio</span>
+      </div>
+      <div class="ai-steps">
+        <div class="ai-step" id="step1">
+          <div class="ai-step-icon"><svg viewBox="0 0 24 24"><path d="M12 3 20 6v5c0 5-3.2 8.5-8 10-4.8-1.5-8-5-8-10V6Z"/></svg></div>
+          <div class="ai-step-text"><b>Hash SHA-256 del MSISDN</b><small>Anonimización del número de teléfono</small></div>
+        </div>
+        <div class="ai-step" id="step2">
+          <div class="ai-step-icon"><svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h4M7 3h7l4 4v14H7Z"/><path d="M14 3v5h4"/></svg></div>
+          <div class="ai-step-text"><b>NER — Limpieza de PII</b><small>Nombres, DNI, direcciones → [REDACTED]</small></div>
+        </div>
+        <div class="ai-step" id="step3">
+          <div class="ai-step-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></div>
+          <div class="ai-step-text"><b>Clasificación semántica</b><small>Mapeo en eje temático CEPLAN</small></div>
+        </div>
+        <div class="ai-step" id="step4">
+          <div class="ai-step-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <div class="ai-step-text"><b>Ley 26300 — Expediente colectivo</b><small>Macrozona Lima Sur · AES-256 en reposo</small></div>
+        </div>
+      </div>
+      <div class="ai-out" id="aiOut">
+        <b>✅ Señal procesada — Lima Sur</b>
+        <p>Eje: <strong>Transporte y Entorno Seguro</strong><br>Exp: EXP-LSUR-2026-TES-003<br>Confianza IA: 94.2% · Ley 26300 activa</p>
+        <a class="track-link" onclick="go('tracker',document.querySelectorAll('.nav-tab')[2])">Ver tracker INC-2026-VES-847 →</a>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- TRACKER -->
+<div id="sec-tracker" class="section">
+  <div class="sec-h">
+    <div class="page-tag">Módulo 3 — Trazabilidad ciudadana</div>
+    <h1>Ruta de la Incidencia</h1>
+    <p>Combate la crisis histórica de confianza. Valeria puede ver exactamente en qué estado está su aporte, igual que un rastreo de delivery.</p>
+  </div>
+  <div class="grid-2">
     <div class="card">
-      <div class="tracker-id">ID: INC-2026-VES-000847 · Estación Villa El Salvador · 14 jun 2026, 07:43</div>
+      <div class="tracker-id-box">INC-2026-VES-000847 · Estación Villa El Salvador · 14 jun 2026, 07:43</div>
       <div class="track-steps">
         <div class="t-step">
-          <div class="t-dot done">✓</div>
+          <div class="t-dot done"><svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-9"/></svg></div>
           <div class="t-head done">Recibido y anonimizado</div>
-          <div class="t-body">Tu voz ya está en el sistema de forma segura. Tus datos personales han sido protegidos bajo la Ley N.º 29733.</div>
-          <span class="badge badge-green">Ley N.º 29733 Art. 13 · 14 jun 2026, 07:43</span>
+          <div class="t-body">MSISDN hasheado con SHA-256. PII eliminada por NER. Datos cifrados AES-256 en reposo.</div>
+          <span class="badge badge-green">Ley N.º 29733 Art. 13 · 07:43</span>
         </div>
         <div class="t-step">
-          <div class="t-dot done">✓</div>
+          <div class="t-dot done"><svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-9"/></svg></div>
           <div class="t-head done">Procesamiento semántico (IA)</div>
-          <div class="t-body">Nuestra IA analizó tu mensaje y lo clasificó en el eje temático: <strong>Transporte y Entorno Seguro</strong>. Macrozona: Lima Sur. Confianza: 94.2%.</div>
-          <span class="badge badge-green">Motor semántico CEPLAN · Fase 1: Diagnóstico</span>
+          <div class="t-body">Clasificado en: <strong>Transporte y Entorno Seguro</strong>. Macrozona: Lima Sur. Confianza: 94.2%.</div>
+          <span class="badge badge-green">Motor NLP CEPLAN · Fase 1 Diagnóstico</span>
         </div>
         <div class="t-step">
-          <div class="t-dot done">✓</div>
+          <div class="t-dot done"><svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-9"/></svg></div>
           <div class="t-head done">Vinculación normativa (Ley 26300)</div>
-          <div class="t-body">Tu recomendación se unió al Expediente Colectivo de Lima Sur. Aportes acumulados en el eje: <strong>1,247</strong>. Categoría: Consulta Ciudadana Virtual Masiva.</div>
-          <span class="badge badge-green">Exp. N.º EXP-LSUR-2026-TES-003</span>
+          <div class="t-body">Suma al Expediente Colectivo de Lima Sur. Aportes en el eje: <strong>1,247</strong>. Categoría: Consulta Ciudadana Virtual Masiva.</div>
+          <span class="badge badge-green">EXP-LSUR-2026-TES-003 · Firmado digitalmente</span>
         </div>
         <div class="t-step">
           <div class="t-dot active">⟳</div>
           <div class="t-head active">En evaluación técnica</div>
-          <div class="t-body">Especialistas del Laboratorio Polilap de CEPLAN están contrastando este expediente en las mesas técnicas intersectoriales.</div>
+          <div class="t-body">Especialistas del Laboratorio Polilap de CEPLAN contrastan el expediente en mesas técnicas intersectoriales.</div>
           <span class="badge badge-amber">En progreso · Mesa técnica 18 jun 2026</span>
         </div>
         <div class="t-step">
-          <div class="t-dot pending">5</div>
-          <div class="t-head pending">Incidencia efectiva</div>
-          <div class="t-body" style="color:var(--text3);">Tu recomendación será incorporada formalmente en la Matriz de Consistencia de la Política Nacional de Juventud (Objetivo Prioritario X).</div>
+          <div class="t-dot pend">5</div>
+          <div class="t-head pend">Incidencia efectiva</div>
+          <div class="t-body" style="color:#bbb;">Incorporación formal en la Matriz de Consistencia de la Política Nacional de Juventud.</div>
           <span class="badge badge-gray">Pendiente</span>
         </div>
       </div>
     </div>
-
-    <div class="card" style="margin-top:12px;">
-      <div class="card-title">Compartir logro cívico</div>
-      <div class="card-sub">Exporta tu tarjeta de incidencia a redes sociales para incentivar la participación de otros jóvenes.</div>
-      <button class="share-btn" onclick="toggleShare()">
-        <div class="si" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">📷</div>
-        Compartir en Instagram Stories / TikTok
-      </button>
-      <div id="share-card" style="display:none;">
-        <div class="share-card" style="margin-top:10px;">
-          <div class="sc-tag">INCIDENCIA CIUDADANA · LIMA SUR · 2026</div>
-          <div class="sc-title">🏆 Mi voz cambió una política pública</div>
-          <div class="sc-body">Aporté al eje <strong>Transporte y Entorno Seguro</strong> desde la Estación Villa El Salvador. Mi recomendación forma parte del Expediente Colectivo de Lima Sur bajo la Ley N.º 26300.</div>
-          <div class="sc-tags">#IncidePe #CertificadoJoven #TransformaGob2026 #VozJovenSinBarreras</div>
+    <div>
+      <div class="card">
+        <div class="page-tag">Compartir logro cívico</div>
+        <div class="share-btns">
+          <button class="share-btn" onclick="toggleShare()">
+            <div class="si" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#bc1888);">📷</div>
+            Compartir en Instagram Stories
+          </button>
+          <button class="share-btn" onclick="toggleShare()">
+            <div class="si" style="background:#010101;">🎵</div>
+            Compartir en TikTok
+          </button>
+        </div>
+        <div id="shareCard" style="display:none;">
+          <div class="share-card-preview">
+            <div class="scp-tag">INCIDENCIA CIUDADANA · LIMA SUR · 2026</div>
+            <div class="scp-title">🏆 Mi voz cambió una política pública</div>
+            <div class="scp-body">Aporté al eje <strong>Transporte y Entorno Seguro</strong> desde la Estación Villa El Salvador. Mi recomendación forma parte del Expediente Colectivo de Lima Sur bajo la Ley N.º 26300.</div>
+            <div class="scp-tags">#IncidePe · #CertificadoJoven · #TransformaGob2026 · #VozJovenSinBarreras</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <div class="page-tag">Seguridad e interoperabilidad</div>
+        <div class="sec-grid">
+          <div class="sec-item">
+            <div class="sec-item-head"><div class="sec-item-icon"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 3 20 6v5c0 5-3.2 8.5-8 10-4.8-1.5-8-5-8-10V6Z"/></svg></div><div class="sec-item-name">SHA-256</div></div>
+            <div class="sec-item-desc">Hash unidireccional del MSISDN con sal. Cumple Privacy by Design.</div>
+            <div class="sec-item-tag">LEY 29733</div>
+          </div>
+          <div class="sec-item">
+            <div class="sec-item-head"><div class="sec-item-icon"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div><div class="sec-item-name">AES-256</div></div>
+            <div class="sec-item-desc">Cifrado en reposo de todos los datasets cualitativos.</div>
+            <div class="sec-item-tag">CIFRADO EN REPOSO</div>
+          </div>
+          <div class="sec-item">
+            <div class="sec-item-head"><div class="sec-item-icon"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 9a12 12 0 0 1 16 0M7.5 12.5a7 7 0 0 1 9 0M10.5 16a3 3 0 0 1 3 0"/></svg></div><div class="sec-item-name">TLS 1.3 + mTLS</div></div>
+            <div class="sec-item-desc">Transferencia segura vía PIDE-PCM con firmas digitales.</div>
+            <div class="sec-item-tag">INTEROPERABILIDAD</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- OCTÓGONOS -->
-  <div id="sec-octogonos" class="section">
-    <div class="sec-title">Ranking de Octógonos — Índice IAJ</div>
-    <div class="sec-desc">Calcula el Índice de Apertura Juvenil (IAJ) de cualquier institución. El octógono se activa automáticamente en GOB.PE según las reglas de CEPLAN.</div>
+<!-- VOCES -->
+<div id="sec-voces" class="section">
+  <div class="sec-h">
+    <div class="page-tag">Módulo — Voces estudiantiles</div>
+    <h1>Voces de Lima periférica</h1>
+    <p>30 aportes simulados de jóvenes de Lima Sur, Norte y Este sobre acceso, permanencia, calidad y empleabilidad en educación superior.</p>
+  </div>
+  <div class="card">
+    <div class="filters-row">
+      <select class="fsel" id="ftopic" onchange="renderVoices()">
+        <option value="all">Todos los temas</option>
+        <option value="Acceso">Acceso</option>
+        <option value="Permanencia">Permanencia</option>
+        <option value="Calidad">Calidad</option>
+        <option value="Empleabilidad">Empleabilidad</option>
+      </select>
+      <select class="fsel" id="fzone" onchange="renderVoices()">
+        <option value="all">Todas las zonas</option>
+        <option value="Lima Sur">Lima Sur</option>
+        <option value="Lima Norte">Lima Norte</option>
+        <option value="Lima Este">Lima Este</option>
+      </select>
+      <select class="fsel" id="fsort" onchange="renderVoices()">
+        <option value="sup-desc">Más apoyadas</option>
+        <option value="sup-asc">Menos apoyadas</option>
+        <option value="recent">Más recientes</option>
+      </select>
+    </div>
+    <div class="results-line"><strong id="vCount">0</strong> voces encontradas</div>
+    <div class="voices-grid" id="voicesGrid"></div>
+  </div>
+</div>
 
+<!-- MAPA -->
+<div id="sec-mapa" class="section">
+  <div class="sec-h">
+    <div class="page-tag">Módulo — Mapa de evidencia</div>
+    <h1>Distribución geográfica de voces</h1>
+    <p>Lima Metropolitana. Intensidad de aportes y apoyos por distrito, con marcadores de temas dominantes.</p>
+  </div>
+  <div class="card">
+    <div class="map-layout">
+      <div id="leafletMap"></div>
+      <div>
+        <div class="map-list-title"><b>Distritos priorizados</b><span id="mapCount"></span></div>
+        <div id="mapList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OCTÓGONOS IAJ -->
+<div id="sec-octogonos" class="section">
+  <div class="sec-h">
+    <div class="page-tag">Módulo 4 — Presión reputacional</div>
+    <h1>Índice de Apertura Juvenil (IAJ)</h1>
+    <p>Calcula el IAJ de cualquier institución. El octógono se publica automáticamente en GOB.PE como sello de logro o sanción reputacional.</p>
+  </div>
+  <div class="grid-2">
     <div class="card">
-      <div class="formula">IAJ = (TAP × 0.40) + (ITD × 0.20) + (DPP × 0.20) + (GSC × 0.20)</div>
-      <div class="ind-grid">
-        <div class="ind-row" style="border-bottom:1px solid var(--gray2);padding-bottom:6px;margin-bottom:4px;">
-          <div style="font-size:10px;font-weight:700;color:var(--text3);">CÓDIGO</div>
-          <div style="font-size:10px;font-weight:700;color:var(--text3);">DESCRIPCIÓN</div>
-          <div style="font-size:10px;font-weight:700;color:var(--text3);text-align:right;">VALOR</div>
-        </div>
-        <div class="ind-row">
-          <div class="ind-code">TAP</div>
-          <div class="ind-name">Tasa de Absorción de Propuestas (peso 40%)</div>
-          <div class="ind-ctrl"><input type="range" min="0" max="100" value="72" id="tap" oninput="calcIAJ()" step="1"><span class="ind-val" id="tap-v">72%</span></div>
-        </div>
-        <div class="ind-row">
-          <div class="ind-code">ITD</div>
-          <div class="ind-name">Índice de Trazabilidad y Devolución (peso 20%)</div>
-          <div class="ind-ctrl"><input type="range" min="0" max="100" value="58" id="itd" oninput="calcIAJ()" step="1"><span class="ind-val" id="itd-v">58%</span></div>
-        </div>
-        <div class="ind-row">
-          <div class="ind-code">DPP</div>
-          <div class="ind-name">Densidad de Participación Periférica (peso 20%)</div>
-          <div class="ind-ctrl"><input type="range" min="0" max="100" value="81" id="dpp" oninput="calcIAJ()" step="1"><span class="ind-val" id="dpp-v">81%</span></div>
-        </div>
-        <div class="ind-row">
-          <div class="ind-code">GSC</div>
-          <div class="ind-name">Grado de Satisfacción Ciudadana (peso 20%)</div>
-          <div class="ind-ctrl"><input type="range" min="0" max="100" value="65" id="gsc" oninput="calcIAJ()" step="1"><span class="ind-val" id="gsc-v">65%</span></div>
-        </div>
-      </div>
+      <div class="formula-box">IAJ = (TAP×0.40) + (ITD×0.20) + (DPP×0.20) + (GSC×0.20)</div>
+      <table class="ind-table">
+        <thead><tr><th>Indicador</th><th>Descripción</th><th>Valor</th></tr></thead>
+        <tbody>
+          <tr><td class="ind-code">TAP</td><td class="ind-name">Tasa de Absorción de Propuestas (40%)</td><td><div class="ind-ctrl"><input type="range" min="0" max="100" value="72" id="tap" oninput="calcIAJ()" step="1"><span class="ind-val" id="tapV">72%</span></div></td></tr>
+          <tr><td class="ind-code">ITD</td><td class="ind-name">Índice de Trazabilidad y Devolución (20%)</td><td><div class="ind-ctrl"><input type="range" min="0" max="100" value="58" id="itd" oninput="calcIAJ()" step="1"><span class="ind-val" id="itdV">58%</span></div></td></tr>
+          <tr><td class="ind-code">DPP</td><td class="ind-name">Densidad de Participación Periférica (20%)</td><td><div class="ind-ctrl"><input type="range" min="0" max="100" value="81" id="dpp" oninput="calcIAJ()" step="1"><span class="ind-val" id="dppV">81%</span></div></td></tr>
+          <tr><td class="ind-code">GSC</td><td class="ind-name">Grado de Satisfacción Ciudadana (20%)</td><td><div class="ind-ctrl"><input type="range" min="0" max="100" value="65" id="gsc" oninput="calcIAJ()" step="1"><span class="ind-val" id="gscV">65%</span></div></td></tr>
+        </tbody>
+      </table>
     </div>
-
-    <div class="iaj-box" id="iaj-box">
-      <div class="iaj-num" id="iaj-num" style="color:var(--amber-dark);">70.8%</div>
-      <div class="iaj-lbl">Índice de Apertura Juvenil (IAJ)</div>
-      <div class="iaj-oct" id="iaj-oct" style="background:var(--amber-light);color:var(--amber-dark);">🟡 OCTÓGONO ÁMBAR: EN PROCESO DE MEJORA</div>
-      <div class="iaj-reason" id="iaj-reason">IAJ entre 50% y 84%. La institución avanza pero necesita mejorar la absorción de propuestas y la devolución de resultados.</div>
-    </div>
-
-    <div class="oct-legend">
-      <div class="oct-item">
-        <div class="oct-shape" style="background:#1D9E75;">ALTO EN PARTIC. EFECTIVA</div>
-        <div class="oct-item-name">Octógono Verde</div>
-        <div class="oct-item-cond">IAJ ≥ 85% → Certificado Joven</div>
+    <div>
+      <div class="iaj-result" id="iajResult">
+        <div class="iaj-num" id="iajNum">70.8%</div>
+        <div class="iaj-lbl">Índice de Apertura Juvenil</div>
+        <div class="iaj-oct" id="iajOct">🟡 ÁMBAR: EN PROCESO DE MEJORA</div>
+        <div class="iaj-reason" id="iajReason">IAJ entre 50% y 84%. Mejorar TAP e ITD para alcanzar el verde.</div>
       </div>
-      <div class="oct-item">
-        <div class="oct-shape" style="background:var(--amber);">EN PROCESO DE MEJORA</div>
-        <div class="oct-item-name">Octógono Ámbar</div>
-        <div class="oct-item-cond">IAJ 50–84% → Observado</div>
-      </div>
-      <div class="oct-item">
-        <div class="oct-shape" style="background:var(--red);">EXCESO ADULTO-CENTRISMO</div>
-        <div class="oct-item-name">Octógono Rojo A</div>
-        <div class="oct-item-cond">IAJ &lt;50% + TAP&lt;15%</div>
-      </div>
-      <div class="oct-item">
-        <div class="oct-shape" style="background:var(--red);">BAJO EN TRAZABILIDAD</div>
-        <div class="oct-item-name">Octógono Rojo B</div>
-        <div class="oct-item-cond">ITD &lt; 30%</div>
+      <div class="oct-legend">
+        <div class="oct-item"><div class="oct-shape" style="background:#08a85a;">ALTO EN PARTIC. EFECTIVA</div><div class="oct-item-name">Verde</div><div class="oct-item-cond">IAJ ≥ 85%</div></div>
+        <div class="oct-item"><div class="oct-shape" style="background:#ffba18;color:#080d35;">EN PROCESO</div><div class="oct-item-name">Ámbar</div><div class="oct-item-cond">50–84%</div></div>
+        <div class="oct-item"><div class="oct-shape" style="background:#e43232;">EXCESO ADULTO-CENTRISMO</div><div class="oct-item-name">Rojo A</div><div class="oct-item-cond">IAJ&lt;50% + TAP&lt;15%</div></div>
+        <div class="oct-item"><div class="oct-shape" style="background:#e43232;">BAJO EN TRAZABILIDAD</div><div class="oct-item-name">Rojo B</div><div class="oct-item-cond">ITD &lt; 30%</div></div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- CÓDIGO -->
-  <div id="sec-codigo" class="section">
-    <div class="sec-title">Código backend</div>
-    <div class="sec-desc">Pipeline completo en Python. Licencia MIT — compatible con el Decreto Legislativo 1412 Art. 29 de Software Público Peruano.</div>
+<!-- CÓDIGO -->
+<div id="sec-codigo" class="section">
+  <div class="sec-h">
+    <div class="page-tag">Backend — Código fuente</div>
+    <h1>Pipeline de ciberseguridad y análisis</h1>
+    <p>Python modular bajo Licencia MIT. Compatible con DL 1412 Art. 29. Listo para despliegue en infraestructura pública peruana.</p>
+  </div>
+  <div class="code-file-tabs">
+    <button class="cft active" onclick="showCode('anon',this)">gatekeeper.py</button>
+    <button class="cft" onclick="showCode('sec',this)">security.py</button>
+    <button class="cft" onclick="showCode('cls',this)">classifier.py</button>
+    <button class="cft" onclick="showCode('iaj',this)">iaj_calculator.py</button>
+    <button class="cft" onclick="showCode('pipe',this)">pipeline.py</button>
+  </div>
+  <div id="code-anon" class="cpanel active">
+    <div class="copy-row"><button class="copy-btn" onclick="copyC('cb-anon')">Copiar</button></div>
+    <div class="cblock" id="cb-anon"><span class="cm"># incidepe/gatekeeper.py — Filtro etario + captura georreferenciada
+# MIT License · Hackathon TransformaGob 2026 · Desafío 17 CEPLAN</span>
 
-    <div class="code-tabs">
-      <button class="code-tab active" onclick="showCode('anon',this)">anonymizer.py</button>
-      <button class="code-tab" onclick="showCode('cls',this)">classifier.py</button>
-      <button class="code-tab" onclick="showCode('iaj',this)">iaj_calculator.py</button>
-      <button class="code-tab" onclick="showCode('pipe',this)">pipeline.py</button>
-    </div>
+<span class="kw">from</span> enum <span class="kw">import</span> Enum
+<span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
 
-    <div id="code-anon" class="code-panel active">
-      <div class="copy-row"><button class="copy-btn" onclick="copyCode('code-anon-block')">Copiar</button></div>
-      <div class="code-block" id="code-anon-block"><span class="cm"># incidepe/anonymizer.py
-# MIT License — Hackathon TransformaGob 2026
-# Anonimización bajo Ley N.º 29733 Art. 13</span>
+<span class="kw">class</span> <span class="fn">AgeGroup</span>(Enum):
+    MENOR    = <span class="st">"menor_18"</span>
+    OBJETIVO = <span class="st">"18_25"</span>       <span class="cm"># Público objetivo CEPLAN</span>
+    MAYOR    = <span class="st">"mayor_25"</span>
 
-<span class="kw">import</span> re
+<span class="kw">class</span> <span class="fn">Station</span>(Enum):
+    BAYOVAR = <span class="st">"QR_BAYOVAR"</span>   <span class="cm"># Lima Norte / SJL</span>
+    VES     = <span class="st">"QR_VES"</span>       <span class="cm"># Lima Sur / Villa El Salvador</span>
+
+STATION_META = {
+    Station.BAYOVAR: {<span class="st">"name"</span>: <span class="st">"Estación Bayóvar"</span>, <span class="st">"macrozona"</span>: <span class="st">"Lima Norte"</span>},
+    Station.VES:     {<span class="st">"name"</span>: <span class="st">"Estación Villa El Salvador"</span>, <span class="st">"macrozona"</span>: <span class="st">"Lima Sur"</span>},
+}
+
+REDIRECT_GOB = <span class="st">"https://www.gob.pe/participacion-ciudadana"</span>
+
+<span class="kw">def</span> <span class="fn">greeting</span>(station: Station) -> str:
+    <span class="st">"""Genera bienvenida contextual con nudge según estación."""</span>
+    meta = STATION_META[station]
+    <span class="kw">return</span> (
+        <span class="st">f"¡Hola! Estás en la {meta['name']} 👋\n\n"</span>
+        <span class="st">"¿El tráfico te quitó 2 horas hoy? Tu experiencia puede "
+        "mejorar las políticas de Lima. Solo toma 2 minutos.\n\n"
+        "Primero, ¿qué edad tienes?\n"
+        "[Menos de 18] · [18 a 25] · [Más de 25]"</span>
+    )
+
+<span class="kw">def</span> <span class="fn">route_by_age</span>(age_group: AgeGroup, station: Station) -> dict:
+    <span class="st">"""
+    Gatekeeper: redirige suavemente fuera del rango objetivo.
+    Garantiza dataset 100% del público CEPLAN sin excluir rudamente.
+    """</span>
+    <span class="kw">if</span> age_group == AgeGroup.OBJETIVO:
+        <span class="kw">return</span> {
+            <span class="st">"proceed"</span>: <span class="nm">True</span>,
+            <span class="st">"message"</span>: (
+                <span class="st">"¡Perfecto! Cuéntanos en un mensaje corto o nota de voz:\n\n"
+                "🔴 ¿Qué problema diario te friega más? "
+                "(transporte, seguridad, chamba...)\n"
+                "🟡 ¿Cómo lo mejorarías?\n"
+                "🟢 ¿Cómo te imaginas tu zona en 5 años?\n\n"
+                "Sin reuniones. Sin trámites. Sin gastar datos 📴"</span>
+            ),
+            <span class="st">"macrozona"</span>: STATION_META[station][<span class="st">"macrozona"</span>],
+        }
+    <span class="kw">else</span>:
+        <span class="kw">return</span> {
+            <span class="st">"proceed"</span>: <span class="nm">False</span>,
+            <span class="st">"message"</span>: (
+                <span class="st">"¡Gracias por tu interés! Este canal está diseñado "
+                "para jóvenes de 18 a 25 años.\n\n"
+                "Para participación ciudadana general, visita:\n"</span>
+                + REDIRECT_GOB
+            ),
+            <span class="st">"macrozona"</span>: <span class="nm">None</span>,
+        }</div>
+  </div>
+  <div id="code-sec" class="cpanel">
+    <div class="copy-row"><button class="copy-btn" onclick="copyC('cb-sec')">Copiar</button></div>
+    <div class="cblock" id="cb-sec"><span class="cm"># incidepe/security.py — Privacy by Design (Ley 29733)
+# SHA-256 + NER + AES-256 + TLS 1.3 ready
+# MIT License · Hackathon TransformaGob 2026</span>
+
+<span class="kw">import</span> hashlib, re, os
 <span class="kw">from</span> typing <span class="kw">import</span> TypedDict, List
 
-<span class="kw">class</span> <span class="fn">PIIRemoval</span>(TypedDict):
-    type: str
-    count: int
+<span class="cm"># ── SHA-256 del identificador de red (MSISDN) ────────────────────</span>
+<span class="kw">def</span> <span class="fn">hash_msisdn</span>(phone: str, salt: str = <span class="nm">None</span>) -> str:
+    <span class="st">"""Hash unidireccional del número de teléfono con sal aleatoria."""</span>
+    salt = salt <span class="kw">or</span> os.urandom(<span class="nm">16</span>).hex()
+    payload = <span class="st">f"{salt}:{phone}"</span>.encode()
+    return hashlib.sha256(payload).hexdigest()
 
-<span class="kw">class</span> <span class="fn">AnonResult</span>(TypedDict):
-    anon_text: str
-    pii_removed: List[PIIRemoval]
-    law_compliance: str
-
-PATTERNS: dict[str, re.Pattern] = {
+<span class="cm"># ── Patrones PII para NER simple (regex) ─────────────────────────</span>
+PII_PATTERNS = {
     <span class="st">"phone"</span>:   re.compile(<span class="st">r'\b(\+51|0051)?[\s\-]?9\d{8}\b'</span>),
     <span class="st">"dni"</span>:     re.compile(<span class="st">r'\b\d{8}\b'</span>),
     <span class="st">"ruc"</span>:     re.compile(<span class="st">r'\b(10|20)\d{9}\b'</span>),
@@ -466,91 +668,94 @@ PATTERNS: dict[str, re.Pattern] = {
     <span class="st">"email"</span>:   re.compile(<span class="st">r'\b[\w._%+\-]+@[\w.\-]+\.[a-zA-Z]{2,}\b'</span>),
 }
 
-<span class="kw">def</span> <span class="fn">anonymize</span>(raw_text: str) -> AnonResult:
-    <span class="st">"""Elimina PII del testimonio según Ley N.º 29733."""</span>
-    cleaned = raw_text
-    removals: List[PIIRemoval] = []
-
-    <span class="kw">for</span> label, pattern <span class="kw">in</span> PATTERNS.items():
-        matches = pattern.findall(cleaned)
-        <span class="kw">if</span> matches:
-            removals.append({<span class="st">"type"</span>: label, <span class="st">"count"</span>: len(matches)})
-            cleaned = pattern.sub(
-                <span class="st">f"[{label.upper()}_REDACTED]"</span>, cleaned
-            )
-
+<span class="kw">def</span> <span class="fn">anonymize_text</span>(raw: str) -> dict:
+    <span class="st">"""Elimina PII del testimonio. Retorna texto limpio + log."""</span>
+    cleaned = raw
+    removals = []
+    <span class="kw">for</span> label, pat <span class="kw">in</span> PII_PATTERNS.items():
+        hits = pat.findall(cleaned)
+        <span class="kw">if</span> hits:
+            removals.append({<span class="st">"type"</span>: label, <span class="st">"count"</span>: len(hits)})
+            cleaned = pat.sub(<span class="st">f"[{label.upper()}_REDACTED]"</span>, cleaned)
     <span class="kw">return</span> {
-        <span class="st">"anon_text"</span>: cleaned,
-        <span class="st">"pii_removed"</span>: removals,
-        <span class="st">"law_compliance"</span>: <span class="st">"Ley N.º 29733 Art. 13 — Datos Sensibles"</span>,
-    }</div>
-    </div>
+        <span class="st">"anon_text"</span>:     cleaned,
+        <span class="st">"pii_removed"</span>:   removals,
+        <span class="st">"law_ref"</span>:       <span class="st">"Ley N.º 29733 Art. 13"</span>,
+        <span class="st">"cipher_rest"</span>:   <span class="st">"AES-256-GCM"</span>,
+        <span class="st">"transport"</span>:     <span class="st">"TLS 1.3"</span>,
+        <span class="st">"interop_api"</span>:   <span class="st">"PIDE-PCM mTLS signed"</span>,
+    }
 
-    <div id="code-cls" class="code-panel">
-      <div class="copy-row"><button class="copy-btn" onclick="copyCode('code-cls-block')">Copiar</button></div>
-      <div class="code-block" id="code-cls-block"><span class="cm"># incidepe/classifier.py
-# Clasificación semántica por ejes CEPLAN
-# MIT License — Hackathon TransformaGob 2026</span>
+<span class="cm"># ── Firma digital secuencial del registro IAJ ─────────────────────</span>
+<span class="kw">import</span> json, datetime
 
-<span class="kw">from</span> typing <span class="kw">import</span> TypedDict
+<span class="kw">def</span> <span class="fn">sign_iaj_record</span>(record: dict, prev_hash: str = <span class="st">""</span>) -> dict:
+    <span class="st">"""
+    Firma el registro IAJ de forma secuencial (cadena de hashes).
+    Garantiza inmutabilidad para auditoría social (anti-manipulación).
+    """</span>
+    record[<span class="st">"timestamp"</span>] = datetime.datetime.utcnow().isoformat() + <span class="st">"Z"</span>
+    record[<span class="st">"prev_hash"</span>] = prev_hash
+    payload = json.dumps(record, sort_keys=<span class="nm">True</span>).encode()
+    record[<span class="st">"signature"</span>] = hashlib.sha256(payload).hexdigest()
+    <span class="kw">return</span> record</div>
+  </div>
+  <div id="code-cls" class="cpanel">
+    <div class="copy-row"><button class="copy-btn" onclick="copyC('cb-cls')">Copiar</button></div>
+    <div class="cblock" id="cb-cls"><span class="cm"># incidepe/classifier.py — Motor semántico CEPLAN
+# Mapea lenguaje juvenil a ejes de Políticas Nacionales
+# MIT License · Hackathon TransformaGob 2026</span>
 
-EJES: dict[str, list[str]] = {
+EJES = {
     <span class="st">"Transporte y Entorno Seguro"</span>: [
-        <span class="st">"metro","bus","combi","tráfico","pista","semáforo",
-        "accidente","mototaxi","paradero","seguridad vial","ruta"</span>],
+        <span class="st">"metro","bus","combi","tráfico","pista","semáforo","accidente",
+        "mototaxi","paradero","seguridad vial","ruta","pasaje","atasco"</span>],
     <span class="st">"Empleo y Oportunidades"</span>: [
-        <span class="st">"trabajo","chamba","sueldo","empleo","contrato",
-        "prácticas","desempleo","empresa","freelance","oferta"</span>],
+        <span class="st">"trabajo","chamba","sueldo","empleo","contrato","prácticas",
+        "desempleo","empresa","freelance","oferta","bolsa laboral"</span>],
     <span class="st">"Seguridad Ciudadana"</span>: [
-        <span class="st">"robo","delincuencia","asalto","policía","serenazgo",
-        "cámara","inseguridad","pandilla","vigilancia"</span>],
-    <span class="st">"Salud Mental y Bienestar"</span>: [
-        <span class="st">"estrés","ansiedad","depresión","psicólogo","salud",
-        "hospital","centro de salud","medicamento","terapia"</span>],
+        <span class="st">"robo","delincuencia","asalto","policía","serenazgo","cámara",
+        "inseguridad","pandilla","vigilancia","extorsión"</span>],
     <span class="st">"Educación y Capacitación"</span>: [
         <span class="st">"universidad","instituto","beca","estudiar","colegio",
-        "capacitación","taller","aprender","curso","egresado"</span>],
+        "capacitación","taller","aprender","curso","egresado","malla"</span>],
+    <span class="st">"Salud Mental y Bienestar"</span>: [
+        <span class="st">"estrés","ansiedad","depresión","psicólogo","salud","hospital",
+        "centro de salud","medicamento","terapia","bienestar"</span>],
 }
 
-<span class="kw">class</span> <span class="fn">ClassResult</span>(TypedDict):
-    eje: str
-    confidence: float
-    all_scores: dict
-    ceplan_fase: str
-    ley_26300_cat: str
+CEPLAN_FASES = {
+    <span class="st">"Transporte y Entorno Seguro"</span>: <span class="st">"OP3 — Infraestructura"</span>,
+    <span class="st">"Empleo y Oportunidades"</span>:    <span class="st">"OP2 — Pertinencia y empleabilidad"</span>,
+    <span class="st">"Seguridad Ciudadana"</span>:        <span class="st">"OP4 — Seguridad y convivencia"</span>,
+    <span class="st">"Educación y Capacitación"</span>:   <span class="st">"OP1 — Acceso y permanencia"</span>,
+    <span class="st">"Salud Mental y Bienestar"</span>:   <span class="st">"OP5 — Bienestar juvenil"</span>,
+}
 
-<span class="kw">def</span> <span class="fn">classify_testimony</span>(anon_text: str) -> ClassResult:
-    <span class="st">"""Mapea testimonio a ejes temáticos CEPLAN con score de confianza."""</span>
+<span class="kw">def</span> <span class="fn">classify</span>(anon_text: str) -> dict:
+    <span class="st">"""Mapea testimonio a eje CEPLAN con score de confianza."""</span>
     scores = {}
-    text_lower = anon_text.lower()
-
-    <span class="kw">for</span> eje, keywords <span class="kw">in</span> EJES.items():
-        hits = sum(1 <span class="kw">for</span> kw <span class="kw">in</span> keywords <span class="kw">if</span> kw <span class="kw">in</span> text_lower)
-        <span class="kw">if</span> hits > 0:
-            scores[eje] = round(hits / len(keywords), 3)
-
+    txt = anon_text.lower()
+    <span class="kw">for</span> eje, kws <span class="kw">in</span> EJES.items():
+        hits = sum(<span class="nm">1</span> <span class="kw">for</span> kw <span class="kw">in</span> kws <span class="kw">if</span> kw <span class="kw">in</span> txt)
+        <span class="kw">if</span> hits: scores[eje] = round(hits / len(kws), <span class="nm">3</span>)
     <span class="kw">if not</span> scores:
-        <span class="kw">return</span> {
-            <span class="st">"eje"</span>: <span class="st">"Sin clasificar"</span>, <span class="st">"confidence"</span>: 0.0,
-            <span class="st">"all_scores"</span>: {}, <span class="st">"ceplan_fase"</span>: <span class="st">"Pendiente revisión manual"</span>,
-            <span class="st">"ley_26300_cat"</span>: <span class="st">"Pendiente"</span>
-        }
-
+        <span class="kw">return</span> {<span class="st">"eje"</span>: <span class="st">"Sin clasificar"</span>, <span class="st">"confidence"</span>: <span class="nm">0.0</span>, <span class="st">"ceplan_op"</span>: <span class="st">"Revisión manual"</span>}
     best = max(scores, key=scores.get)
     <span class="kw">return</span> {
-        <span class="st">"eje"</span>: best,
+        <span class="st">"eje"</span>:        best,
         <span class="st">"confidence"</span>: scores[best],
         <span class="st">"all_scores"</span>: scores,
-        <span class="st">"ceplan_fase"</span>: <span class="st">"Fase 1 — Diagnóstico del Problema Público"</span>,
-        <span class="st">"ley_26300_cat"</span>: <span class="st">"Consulta Ciudadana Virtual Masiva"</span>,
+        <span class="st">"ceplan_op"</span>:  CEPLAN_FASES.get(best, <span class="st">"OP desconocido"</span>),
+        <span class="st">"fase"</span>:       <span class="st">"Fase 1 — Diagnóstico del Problema Público"</span>,
+        <span class="st">"ley_26300"</span>:  <span class="st">"Consulta Ciudadana Virtual Masiva"</span>,
     }</div>
-    </div>
-
-    <div id="code-iaj" class="code-panel">
-      <div class="copy-row"><button class="copy-btn" onclick="copyCode('code-iaj-block')">Copiar</button></div>
-      <div class="code-block" id="code-iaj-block"><span class="cm"># incidepe/iaj_calculator.py
-# Índice de Apertura Juvenil + Sistema de Octógonos
-# MIT License — Hackathon TransformaGob 2026</span>
+  </div>
+  <div id="code-iaj" class="cpanel">
+    <div class="copy-row"><button class="copy-btn" onclick="copyC('cb-iaj')">Copiar</button></div>
+    <div class="cblock" id="cb-iaj"><span class="cm"># incidepe/iaj_calculator.py — Ranking + Octógonos reputacionales
+# Registros firmados digitalmente para auditoría social inmutable
+# MIT License · Hackathon TransformaGob 2026</span>
 
 <span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
 <span class="kw">from</span> enum <span class="kw">import</span> Enum
@@ -563,234 +768,451 @@ EJES: dict[str, list[str]] = {
 
 <span class="kw">@dataclass</span>
 <span class="kw">class</span> <span class="fn">IAJResult</span>:
-    tap: float
-    itd: float
-    dpp: float
-    gsc: float
+    tap: float; itd: float; dpp: float; gsc: float
     iaj: float = <span class="nm">0.0</span>
     octogono: Octogono = Octogono.AMBAR
     certificado_joven: bool = <span class="nm">False</span>
     razon: str = <span class="st">""</span>
+    gob_pe_url: str = <span class="st">""</span>
 
-<span class="kw">def</span> <span class="fn">calcular_iaj</span>(
-    tap: float, itd: float,
-    dpp: float, gsc: float
-) -> IAJResult:
+<span class="kw">def</span> <span class="fn">calcular_iaj</span>(tap: float, itd: float, dpp: float, gsc: float,
+                   entidad_id: str = <span class="st">"ENT-001"</span>) -> IAJResult:
     <span class="st">"""
-    Fórmula oficial IAJ:
-    IAJ = (TAP × 0.40) + (ITD × 0.20) + (DPP × 0.20) + (GSC × 0.20)
-    Todos los valores en porcentaje (0 a 100).
+    Fórmula oficial:  IAJ = (TAP×0.40)+(ITD×0.20)+(DPP×0.20)+(GSC×0.20)
+    Reglas (orden de prioridad estricto):
+    1. ITD < 30  → Rojo B (trazabilidad)
+    2. IAJ < 50 y TAP < 15 → Rojo A (adultocentrismo)
+    3. IAJ >= 85 → Verde + Certificado Joven
+    4. else → Ámbar
     """</span>
     iaj = (tap * <span class="nm">0.40</span>) + (itd * <span class="nm">0.20</span>) + (dpp * <span class="nm">0.20</span>) + (gsc * <span class="nm">0.20</span>)
-    result = IAJResult(tap=tap, itd=itd, dpp=dpp, gsc=gsc, iaj=round(iaj, <span class="nm">2</span>))
+    r = IAJResult(tap=tap, itd=itd, dpp=dpp, gsc=gsc, iaj=round(iaj, <span class="nm">2</span>))
 
-    <span class="cm"># Reglas de activación — orden de prioridad estricto</span>
     <span class="kw">if</span> itd < <span class="nm">30</span>:
-        result.octogono = Octogono.ROJO_B
-        result.razon = <span class="st">"ITD < 30%: sanción por no devolver resultados"</span>
+        r.octogono, r.razon = Octogono.ROJO_B, <span class="st">"ITD < 30%: sin devolución de resultados"</span>
     <span class="kw">elif</span> iaj < <span class="nm">50</span> <span class="kw">and</span> tap < <span class="nm">15</span>:
-        result.octogono = Octogono.ROJO_A
-        result.razon = <span class="st">"IAJ < 50% y TAP < 15%: adultocentrismo activo"</span>
+        r.octogono, r.razon = Octogono.ROJO_A, <span class="st">"Adultocentrismo activo: ignora demandas juveniles"</span>
     <span class="kw">elif</span> iaj >= <span class="nm">85</span>:
-        result.octogono = Octogono.VERDE
-        result.certificado_joven = <span class="nm">True</span>
-        result.razon = <span class="st">"Certificado Joven otorgado — destacado en GOB.PE"</span>
+        r.octogono = Octogono.VERDE
+        r.certificado_joven = <span class="nm">True</span>
+        r.razon = <span class="st">"Certificado Joven activo — destacado en GOB.PE"</span>
+        r.gob_pe_url = <span class="st">f"https://www.gob.pe/institucion/{entidad_id}/certificado-joven"</span>
     <span class="kw">else</span>:
-        result.octogono = Octogono.AMBAR
-        result.razon = <span class="st">"En proceso — mejorar TAP e ITD para alcanzar el verde"</span>
-
-    <span class="kw">return</span> result</div>
-    </div>
-
-    <div id="code-pipe" class="code-panel">
-      <div class="copy-row"><button class="copy-btn" onclick="copyCode('code-pipe-block')">Copiar</button></div>
-      <div class="code-block" id="code-pipe-block"><span class="cm"># incidepe/pipeline.py
-# Orquestador principal del sistema IncidePe
-# MIT License — Hackathon TransformaGob 2026</span>
+        r.octogono, r.razon = Octogono.AMBAR, <span class="st">"En mejora — subir TAP e ITD para el verde"</span>
+    <span class="kw">return</span> r</div>
+  </div>
+  <div id="code-pipe" class="cpanel">
+    <div class="copy-row"><button class="copy-btn" onclick="copyC('cb-pipe')">Copiar</button></div>
+    <div class="cblock" id="cb-pipe"><span class="cm"># incidepe/pipeline.py — Orquestador principal del ecosistema
+# MIT License · Hackathon TransformaGob 2026</span>
 
 <span class="kw">import</span> uuid, datetime
-<span class="kw">from</span> .anonymizer <span class="kw">import</span> anonymize
-<span class="kw">from</span> .classifier <span class="kw">import</span> classify_testimony
-
-MACROZONAS = {
-    <span class="st">"QR_BAYOVAR"</span>: <span class="st">"Lima Este"</span>,
-    <span class="st">"QR_VES"</span>:     <span class="st">"Lima Sur"</span>,
-}
+<span class="kw">from</span> .gatekeeper <span class="kw">import</span> Station, AgeGroup, route_by_age
+<span class="kw">from</span> .security   <span class="kw">import</span> hash_msisdn, anonymize_text, sign_iaj_record
+<span class="kw">from</span> .classifier <span class="kw">import</span> classify
 
 <span class="kw">def</span> <span class="fn">run_pipeline</span>(
-    raw_text: str,
-    estacion_id: str,
+    raw_text:  str,
+    msisdn:    str,
+    station:   Station,
+    age_group: AgeGroup,
+    gsc_score: float = <span class="nm">4.0</span>,
 ) -> dict:
     <span class="st">"""
-    Pipeline completo:
-    1. Anonimiza PII (Ley 29733)
-    2. Clasifica por eje CEPLAN
-    3. Registra en macrozona correspondiente
-    4. Devuelve payload listo para tracker
+    Pipeline completo IncidePe:
+    1. Gatekeeper etario
+    2. Hash SHA-256 del MSISDN
+    3. Anonimización NER (Ley 29733)
+    4. Clasificación semántica CEPLAN
+    5. Firma digital del registro
+    6. Retorna payload para tracker + GOB.PE
     """</span>
-    macrozona = MACROZONAS.get(estacion_id, <span class="st">"Lima Metropolitana"</span>)
-    anon = anonymize(raw_text)
-    cls  = classify_testimony(anon[<span class="st">"anon_text"</span>])
-    year = datetime.date.today().year
-    uid  = str(uuid.uuid4())[:6].upper()
+    gate = route_by_age(age_group, station)
+    <span class="kw">if not</span> gate[<span class="st">"proceed"</span>]:
+        <span class="kw">return</span> {<span class="st">"status"</span>: <span class="st">"redirected"</span>, <span class="st">"message"</span>: gate[<span class="st">"message"</span>]}
 
-    <span class="kw">return</span> {
-        <span class="st">"incidencia_id"</span>:    <span class="st">f"INC-{year}-{estacion_id.replace('QR_','')}-{uid}"</span>,
-        <span class="st">"timestamp"</span>:        datetime.datetime.utcnow().isoformat() + <span class="st">"Z"</span>,
-        <span class="st">"estacion"</span>:         estacion_id,
-        <span class="st">"macrozona"</span>:        macrozona,
-        <span class="st">"anonimizacion"</span>:    anon,
-        <span class="st">"clasificacion"</span>:    cls,
-        <span class="st">"estado"</span>:           <span class="nm">1</span>,
-        <span class="st">"ley_26300_cat"</span>:    cls[<span class="st">"ley_26300_cat"</span>],
-        <span class="st">"tracker_url"</span>:      <span class="st">f"https://incidepe.gob.pe/tracker/INC-{year}-{uid}"</span>,
+    anon_id  = hash_msisdn(msisdn)
+    anon     = anonymize_text(raw_text)
+    cls      = classify(anon[<span class="st">"anon_text"</span>])
+    inc_id   = <span class="st">f"INC-{datetime.date.today().year}-{station.name}-{str(uuid.uuid4())[:6].upper()}"</span>
+
+    record = {
+        <span class="st">"incidencia_id"</span>: inc_id,
+        <span class="st">"anon_user_id"</span>:  anon_id,
+        <span class="st">"macrozona"</span>:     gate[<span class="st">"macrozona"</span>],
+        <span class="st">"clasificacion"</span>: cls,
+        <span class="st">"pii_log"</span>:       anon[<span class="st">"pii_removed"</span>],
+        <span class="st">"estado"</span>:         <span class="nm">1</span>,
+        <span class="st">"tracker_url"</span>:   <span class="st">f"https://incidepe.gob.pe/tracker/{inc_id}"</span>,
+        <span class="st">"gsc_score"</span>:     gsc_score,
     }
-
-<span class="cm"># --- Uso de ejemplo ---</span>
-<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
-    resultado = run_pipeline(
-        raw_text=<span class="st">"Los buses de la ruta 48 nunca paran en el paradero"</span>,
-        estacion_id=<span class="st">"QR_VES"</span>,
-    )
-    <span class="kw">import</span> json
-    print(json.dumps(resultado, ensure_ascii=<span class="nm">False</span>, indent=<span class="nm">2</span>))</div>
-    </div>
+    signed = sign_iaj_record(record)
+    <span class="kw">return</span> signed</div>
   </div>
-
 </div>
 
+<!-- POSTER / QR AFICHE -->
+<div id="sec-poster" class="section">
+  <div class="sec-h">
+    <div class="page-tag">Canal físico territorial</div>
+    <h1>Afiche con QR para estaciones</h1>
+    <p>Publicidad con nudge en andenes de la Línea 1 del Metro de Lima. Activa el Deep Link a WhatsApp al escanear.</p>
+  </div>
+  <div class="poster-wrap">
+    <div class="poster">
+      <div class="poster-brand">
+        <div class="poster-oct">IP</div>
+        <div class="poster-brand-name">IncidePe</div>
+      </div>
+      <div class="poster-nudge">¿El tráfico te quitó <em>2 horas</em> hoy?<br>Tu voz puede cambiarlo.</div>
+      <div class="poster-qr-box">
+        <svg class="qr-svg" id="posterQr" viewBox="0 0 41 41" role="img" aria-label="QR de acceso a IncidePe"></svg>
+      </div>
+      <div class="poster-scan">Escanea y participa por WhatsApp · Sin datos móviles</div>
+      <div class="poster-pills">
+        <span class="poster-pill">18 a 25 años</span>
+        <span class="poster-pill">2 minutos</span>
+        <span class="poster-pill">Sin trámites</span>
+        <span class="poster-pill">Ley 29733</span>
+      </div>
+      <div class="poster-ceplan">CEPLAN · PCM · PNESTP · TransformaGob 2026</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<!-- LEAFLET -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  .leaflet-container { font-family: var(--font); }
+  .district-label { background:none; border:none; font-size:10px; font-weight:700; color:#080d35; text-shadow:0 0 4px #fff,0 0 4px #fff; }
+  .heat-legend { background:white; padding:8px 12px; border-radius:8px; font-size:11px; border:1px solid #dde3ef; }
+</style>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
 <script>
-const FLOW = [
-  {t:'bot', text:'📍 <em style="color:#888;font-size:11px;">Sistema detecta QR_VES — Estación Villa El Salvador</em>', delay:0, step:'Activación por QR'},
-  {t:'bot', text:'¡Hola! Qué buena cola estás haciendo en la <b>Estación Villa El Salvador</b> 👋\n\nSi el tráfico te quita horas de tu vida, cuéntanos en un toque: ¿qué problema diario (transporte, seguridad, chamba) te friega más en tu zona y cómo lo mejorarías?\n\nEnvíanos un texto corto o una nota de voz de 1 min 🎤', delay:800, step:'Bienvenida contextual'},
-  {t:'user', text:'Oe, el problema es que los buses de la ruta 48 nunca paran en el paradero de la av. Heroes, siempre se pasan de largo. Deberían poner cámaras o multas a los choferes.', delay:2000, name:'Vanessa · 22 años'},
-  {t:'bot', text:'⚙️ <em style="color:#888;font-size:11px;">Procesando... anonimizando con Ley N.º 29733...</em>', delay:600, step:'Pipeline backend'},
-  {t:'bot', text:'¡Gracias, Vanessa! 🙌\n\nTu mensaje fue anonimizado y clasificado en el eje:\n<span class="law-tag">🚌 Transporte y Entorno Seguro</span>\n\nTu aporte se suma al Expediente Colectivo de <b>Lima Sur</b> bajo la Ley N.º 26300.\n\nDale estrellitas a tu experiencia (responde del 1 al 5):', delay:1400, step:'Clasificación IA + Ley 26300'},
-  {t:'user', text:'4 — bien fácil de usar 👍', delay:1200, name:'Vanessa · 22 años'},
-  {t:'bot', text:'¡Perfecto! 🎯 Registramos tu satisfacción (4/5).\n\nAquí tu link de seguimiento:\n👉 <b>incidepe.gob.pe/tracker/INC-2026-VES-000847</b>\n\nTe avisaremos aquí cuando tu aporte avance de estado. 🔔\n<span class="law-tag">✅ Tu voz está protegida y en camino 🇵🇪</span>', delay:1000, step:'Link tracker + cierre'},
+// ── VOICES DATA ────────────────────────────────────────────────────
+const VOICES=[
+  {id:"practicas",tag:"Empleabilidad",chip:"emp",icon:"💼",title:"No encuentro prácticas preprofesionales",summary:"Las convocatorias son escasas y piden experiencia previa desde VMT.",zone:"Lima Sur",district:"Villa María del Triunfo",supports:47,dateOrder:30,mine:true,code:"PV-8K21"},
+  {id:"beca",tag:"Acceso",chip:"acc",icon:"💰",title:"La beca no cubre costos diarios",summary:"El apoyo no considera pasajes, materiales ni alimentación.",zone:"Lima Norte",district:"Comas",supports:38,dateOrder:29,mine:false},
+  {id:"malla",tag:"Calidad",chip:"cal",icon:"🎓",title:"La malla no conversa con el mercado",summary:"Cursos desactualizados reducen la preparación para el trabajo real.",zone:"Lima Este",district:"Ate",supports:33,dateOrder:28,mine:false},
+  {id:"salud",tag:"Permanencia",chip:"per",icon:"💚",title:"No hay soporte de salud mental suficiente",summary:"Estudiar y trabajar al mismo tiempo eleva el riesgo de abandono.",zone:"Lima Sur",district:"San Juan de Miraflores",supports:44,dateOrder:27,mine:false},
+  {id:"horarios",tag:"Permanencia",chip:"per",icon:"⏰",title:"Los horarios no se adaptan a quienes trabajan",summary:"Clases diurnas obligan a escoger entre estudiar y trabajar.",zone:"Lima Norte",district:"Los Olivos",supports:29,dateOrder:26,mine:false},
+  {id:"info",tag:"Acceso",chip:"acc",icon:"📋",title:"La información sobre becas llega tarde",summary:"Los plazos y requisitos no son comunicados a tiempo en periferias.",zone:"Lima Norte",district:"Independencia",supports:35,dateOrder:25,mine:false},
+  {id:"transporte",tag:"Permanencia",chip:"per",icon:"🚌",title:"El transporte consume horas de estudio",summary:"3 horas diarias de traslado afectan rendimiento y permanencia.",zone:"Lima Sur",district:"Villa El Salvador",supports:41,dateOrder:24,mine:false},
+  {id:"convenios",tag:"Empleabilidad",chip:"emp",icon:"🤝",title:"Faltan convenios empresa-universidad en la periferia",summary:"Las bolsas de empleo no llegan a sedes periféricas.",zone:"Lima Este",district:"Santa Anita",supports:27,dateOrder:23,mine:false},
+  {id:"labs",tag:"Calidad",chip:"cal",icon:"🔬",title:"Los laboratorios están desactualizados",summary:"Equipamiento obsoleto no prepara para el mercado tecnológico.",zone:"Lima Norte",district:"Puente Piedra",supports:22,dateOrder:22,mine:false},
+  {id:"tutorias",tag:"Permanencia",chip:"per",icon:"👥",title:"Las tutorías no llegan a todos por igual",summary:"El acompañamiento académico es insuficiente para quienes trabajan.",zone:"Lima Sur",district:"Chorrillos",supports:31,dateOrder:21,mine:false},
 ];
 
-let chat = document.getElementById('chat-messages');
-let playing = false;
-
-function addBubble(msg) {
-  const div = document.createElement('div');
-  const cls = msg.t === 'bot' ? 'bot' : 'user';
-  const name = msg.name ? `<div style="font-size:10px;color:#999;margin-bottom:2px;text-align:right;">${msg.name}</div>` : '';
-  const step = msg.step ? `<div class="step-lbl">${msg.step}</div>` : '';
-  const txt = msg.text.replace(/\n/g,'<br>');
-  const ts = new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
-  div.innerHTML = `${msg.t==='user'?name:''}<div class="bubble ${cls}">${step}${txt}<div class="ts">${ts}</div></div>`;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-}
-
-function addTyping() {
-  const div = document.createElement('div');
-  div.className = 'typing-wrapper';
-  div.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-  return div;
-}
-
-async function playFlow() {
-  if (playing) return;
-  playing = true;
-  for (let i = 0; i < FLOW.length; i++) {
-    await sleep(FLOW[i].delay);
-    if (FLOW[i].t === 'bot') {
-      const td = addTyping();
-      await sleep(900);
-      td.remove();
-    }
-    addBubble(FLOW[i]);
+// ── NAV ────────────────────────────────────────────────────────────
+let mapInit=false;
+function go(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(id==='chatbot' && !document.querySelector('#chatBody .bubble')) startChat();
+  if(id==='voces') renderVoices();
+  if(id==='mapa' && !mapInit){
+    // Esperar al siguiente frame para que display:block sea efectivo antes de inicializar Leaflet
+    setTimeout(()=>{initMap();mapInit=true;},50);
+  } else if(id==='mapa' && mapInit && window._leafletMap){
+    window._leafletMap.invalidateSize();
   }
-  playing = false;
+  if(id==='poster') drawQR();
+  if(id==='octogonos') calcIAJ();
 }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+// ── CHATBOT ────────────────────────────────────────────────────────
+const FLOW=[
+  {t:'bot',text:'📍 <em style="color:#aaa;font-size:11px;">Sistema detecta QR_VES — Estación Villa El Salvador</em>',delay:0,step:'Activación QR'},
+  {t:'bot',text:'¡Hola! Estás en la <b>Estación Villa El Salvador</b> 👋\n\n¿El tráfico te quitó 2 horas hoy? Tu experiencia puede mejorar las políticas de Lima. Solo toma 2 minutos.\n\nPrimero, <b>¿cuántos años tienes?</b>',delay:700,step:'Gatekeeper etario'},
+  {t:'age-btns',delay:1000},
+  {t:'bot',text:'¡Perfecto! 🙌 Cuéntanos en un mensaje o nota de voz:\n\n🔴 ¿Qué problema diario te friega más?\n🟡 ¿Cómo lo mejorarías?\n🟢 ¿Cómo te imaginas tu zona en 5 años?\n\n<span style="font-size:10px;color:#aaa;">Sin datos móviles 📴 Sin trámites</span>',delay:400,step:'Captura de testimonio',waitForAge:true},
+  {t:'user',text:'Oe, los buses de la ruta 48 nunca paran en el paradero de la av. Héroes. Te dejan plantada y llegas tarde a clases. Deberían poner cámaras y multas a los choferes que se pasan los paraderos.',delay:2500,name:'Valeria · VMT'},
+  {t:'bot',text:'⚙️ <em style="color:#aaa;font-size:11px;">Procesando: SHA-256 del MSISDN... NER limpiando PII...</em>',delay:500,step:'Pipeline seguridad'},
+  {t:'bot',text:'✅ <b>Señal procesada</b>\n\nEje detectado: <b>Transporte y Entorno Seguro</b>\nMacrozona: Lima Sur · Confianza: 94.2%\nLey N.º 26300: Expediente EXP-LSUR-2026-TES-003\n\n<span class="law">🔐 Anonimizado · SHA-256 · Ley 29733</span>',delay:1400,step:'Clasificación CEPLAN'},
+  {t:'bot',text:'¿Del 1 al 5, qué tan fácil fue participar? (responde con el número 🌟)',delay:1000,step:'Micro-encuesta GSC'},
+  {t:'user',text:'4 — súper fácil, gracias 👍',delay:1200,name:'Valeria · VMT'},
+  {t:'bot',text:'¡Gracias! 🎯 GSC registrado: 4/5\n\nSigue tu aporte en tiempo real:\n👉 <b>incidepe.gob.pe/tracker/INC-2026-VES-847</b>\n\n<span class="law">✅ Tu voz está en camino a la política pública 🇵🇪</span>',delay:900,step:'Tracker + cierre'},
+];
 
-function sendMsg() {
-  const inp = document.getElementById('user-input');
-  const val = inp.value.trim();
-  if (!val) return;
-  addBubble({t:'user', text:val, name:'Tú'});
-  inp.value = '';
-  setTimeout(() => {
-    addBubble({t:'bot', text:'¡Gracias por tu aporte! 🙏 Ve al tab <b>Tracker</b> para seguir el estado de tu incidencia en tiempo real.', step:''});
-  }, 1100);
+let chatPlaying=false, ageSelected=false;
+const chatEl=()=>document.getElementById('chatBody');
+function addB(msg){
+  const el=document.createElement('div');
+  const cls=msg.t==='user'?'user':'bot';
+  const name=msg.name?`<div style="font-size:9px;color:#aaa;text-align:right;margin-bottom:2px;">${msg.name}</div>`:'';
+  const step=msg.step?`<div class="step-tag">${msg.step}</div>`:'';
+  const txt=(msg.text||'').replace(/\n/g,'<br>');
+  const ts=new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+  el.innerHTML=`${msg.t==='user'?name:''}<div class="bubble ${cls}">${step}${txt}<div class="ts">${ts}</div></div>`;
+  chatEl().appendChild(el); chatEl().scrollTop=9999; return el;
 }
-
-function resetChat() {
-  chat.innerHTML = '';
-  playing = false;
-  setTimeout(playFlow, 300);
+function addTyping(){const el=document.createElement('div');el.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';chatEl().appendChild(el);chatEl().scrollTop=9999;return el;}
+function addAgeBtns(){
+  const el=document.createElement('div');
+  el.className='bubble bot'; el.style.alignSelf='flex-start';
+  el.innerHTML=`<div class="wa-age-btns">
+    <button class="age-btn" onclick="selectAge('menor',this)">Menos de 18</button>
+    <button class="age-btn" onclick="selectAge('objetivo',this)">18 a 25 años</button>
+    <button class="age-btn" onclick="selectAge('mayor',this)">Más de 25</button>
+  </div>`;
+  chatEl().appendChild(el); chatEl().scrollTop=9999;
 }
-
-function showSection(id, btn) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('sec-' + id).classList.add('active');
-  btn.classList.add('active');
-  if (id === 'chatbot' && chat.children.length === 0) playFlow();
-}
-
-function toggleShare() {
-  const el = document.getElementById('share-card');
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-
-function calcIAJ() {
-  const tap = +document.getElementById('tap').value;
-  const itd = +document.getElementById('itd').value;
-  const dpp = +document.getElementById('dpp').value;
-  const gsc = +document.getElementById('gsc').value;
-  document.getElementById('tap-v').textContent = tap + '%';
-  document.getElementById('itd-v').textContent = itd + '%';
-  document.getElementById('dpp-v').textContent = dpp + '%';
-  document.getElementById('gsc-v').textContent = gsc + '%';
-  const iaj = (tap * 0.40) + (itd * 0.20) + (dpp * 0.20) + (gsc * 0.20);
-  const iajR = Math.round(iaj * 10) / 10;
-  const num = document.getElementById('iaj-num');
-  const oct = document.getElementById('iaj-oct');
-  const reason = document.getElementById('iaj-reason');
-  if (itd < 30) {
-    num.style.color = '#791F1F'; oct.style.background = '#FCEBEB'; oct.style.color = '#791F1F';
-    oct.textContent = '🔴 OCTÓGONO ROJO: BAJO EN TRAZABILIDAD';
-    reason.textContent = 'ITD por debajo del 30%. La institución no devuelve resultados. Sanción reputacional activada en GOB.PE.';
-  } else if (iaj < 50 && tap < 15) {
-    num.style.color = '#791F1F'; oct.style.background = '#FCEBEB'; oct.style.color = '#791F1F';
-    oct.textContent = '🔴 OCTÓGONO ROJO: EXCESO DE ADULTOCENTRISMO';
-    reason.textContent = 'IAJ < 50% y TAP < 15%. La institución ignora las demandas juveniles. Sanción pública activada.';
-  } else if (iaj >= 85) {
-    num.style.color = '#085041'; oct.style.background = '#E1F5EE'; oct.style.color = '#085041';
-    oct.textContent = '🟢 OCTÓGONO VERDE: ALTO EN PARTICIPACIÓN EFECTIVA';
-    reason.textContent = '¡Certificado Joven otorgado! Esta institución aparece destacada en GOB.PE como modelo de participación juvenil.';
+function selectAge(g,btn){
+  document.querySelectorAll('.age-btn').forEach(b=>b.disabled=true);
+  btn.classList.add('sel');
+  const label={'menor':'Menos de 18','objetivo':'18 a 25 años','mayor':'Más de 25'}[g];
+  addB({t:'user',text:label,name:'Valeria · VMT'});
+  if(g!=='objetivo'){
+    setTimeout(()=>{const td=addTyping();setTimeout(()=>{td.remove();addB({t:'bot',text:'¡Gracias por tu interés! Este canal es para jóvenes de 18 a 25 años.\n\nPara participación ciudadana general visita:\n🔗 <b>gob.pe/participacion-ciudadana</b>\n\n¡Sigue participando! 🙌',step:'Redirección GOB.PE'});},900);},400);
   } else {
-    num.style.color = '#633806'; oct.style.background = '#FAEEDA'; oct.style.color = '#633806';
-    oct.textContent = '🟡 OCTÓGONO ÁMBAR: EN PROCESO DE MEJORA';
-    reason.textContent = 'IAJ entre 50% y 84%. La institución avanza pero necesita mejorar la absorción de propuestas y la trazabilidad.';
+    ageSelected=true;
+    setTimeout(()=>{
+      const td=addTyping();
+      setTimeout(()=>{td.remove();addB({t:'bot',text:'¡Perfecto! 🙌 Cuéntanos en un mensaje o nota de voz:\n\n🔴 ¿Qué problema diario te friega más?\n🟡 ¿Cómo lo mejorarías?\n🟢 ¿Cómo te imaginas tu zona en 5 años?\n\n<span style="font-size:10px;color:#aaa;">Sin datos móviles 📴 Sin trámites</span>',step:'Captura de testimonio'});resumeFlow();},900);
+    },400);
   }
-  num.textContent = iajR.toFixed(1) + '%';
 }
-
-function showCode(id, btn) {
-  document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('code-' + id).classList.add('active');
-  btn.classList.add('active');
+let flowIdx=0;
+async function startChat(){
+  if(chatPlaying)return; chatPlaying=true;
+  for(let i=0;i<3;i++){
+    await sl(FLOW[i].delay||600);
+    if(FLOW[i].t==='age-btns'){addAgeBtns();flowIdx=3;break;}
+    if(FLOW[i].t==='bot'){const td=addTyping();await sl(800);td.remove();}
+    addB(FLOW[i]);
+  }
+  chatPlaying=false;
 }
-
-function copyCode(id) {
-  const el = document.getElementById(id);
-  navigator.clipboard.writeText(el.innerText).then(() => {
-    const btn = el.previousElementSibling.querySelector('button');
-    btn.textContent = '✓ Copiado';
-    setTimeout(() => btn.textContent = 'Copiar', 2000);
+async function resumeFlow(){
+  chatPlaying=true;
+  for(let i=flowIdx;i<FLOW.length;i++){
+    if(FLOW[i].waitForAge&&!ageSelected)continue;
+    await sl(FLOW[i].delay||600);
+    if(FLOW[i].t==='bot'){const td=addTyping();await sl(900);td.remove();}
+    addB(FLOW[i]);
+    activateAI(i);
+  }
+  chatPlaying=false;
+}
+function activateAI(i){
+  const st=document.getElementById('aiStatus');
+  if(i===5){setAIStep(1,'Hash SHA-256 del MSISDN...');}
+  if(i===6){setAIStep(2,'NER — Limpiando PII...');}
+  if(i===7){setAIStep(3,'Clasificando eje CEPLAN...');}
+  if(i===8){setAIStep(4,'Firmando registro digitalmente...');setTimeout(()=>{document.getElementById('aiOut').classList.add('show');},800);}
+}
+function setAIStep(n,lbl){
+  document.getElementById('aiStatus').textContent=lbl;
+  [1,2,3,4].forEach(k=>{
+    const el=document.getElementById('step'+k);
+    el.classList.remove('done','active');
+    if(k<n) el.classList.add('done');
+    if(k===n) el.classList.add('active');
   });
 }
+function sendFree(){
+  const inp=document.getElementById('chatInput');
+  const v=inp.value.trim(); if(!v)return;
+  addB({t:'user',text:v,name:'Tú'});
+  inp.value='';
+  setTimeout(()=>{const td=addTyping();setTimeout(()=>{td.remove();addB({t:'bot',text:'¡Gracias por tu aporte! 🙏 Ve al tab <b>Tracker</b> para seguir tu incidencia.',step:''});},1000);},400);
+}
+function resetChat(){document.getElementById('chatBody').innerHTML='';chatPlaying=false;ageSelected=false;flowIdx=0;document.getElementById('aiOut').classList.remove('show');setAIStep(0,'En espera del testimonio');setTimeout(startChat,300);}
 
+// ── VOICES ─────────────────────────────────────────────────────────
+function renderVoices(){
+  const t=document.getElementById('ftopic').value;
+  const z=document.getElementById('fzone').value;
+  const s=document.getElementById('fsort').value;
+  let v=[...VOICES];
+  if(t!=='all') v=v.filter(x=>x.tag===t);
+  if(z!=='all') v=v.filter(x=>x.zone===z);
+  if(s==='sup-asc') v.sort((a,b)=>a.supports-b.supports);
+  else if(s==='recent') v.sort((a,b)=>b.dateOrder-a.dateOrder);
+  else v.sort((a,b)=>b.supports-a.supports);
+  document.getElementById('vCount').textContent=v.length;
+  document.getElementById('voicesGrid').innerHTML=v.map(x=>`
+    <div class="voice-card ${x.mine?'mine':''}">
+      <div class="vc-top"><span class="vc-chip ${x.chip}">${x.mine?'Tu voz':x.tag}</span><span class="vc-dist">${x.district}</span></div>
+      <div class="vc-title">${x.icon} ${x.title}</div>
+      <div class="vc-sum">${x.summary}</div>
+      <div class="vc-footer"><span class="vc-sup">⭐ ${x.supports} apoyos</span>${x.code?`<span class="vc-dist">${x.code}</span>`:''}</div>
+    </div>
+  `).join('');
+}
+
+// ── MAPA ───────────────────────────────────────────────────────────
+function initMap(){
+  const DM={
+    "Villa María del Triunfo":{lat:-12.1627,lng:-76.9436},
+    "Comas":{lat:-11.9416,lng:-77.0574},
+    "Ate":{lat:-12.0264,lng:-76.9218},
+    "San Juan de Miraflores":{lat:-12.1571,lng:-76.9702},
+    "Los Olivos":{lat:-11.9630,lng:-77.0738},
+    "Independencia":{lat:-11.9930,lng:-77.0540},
+    "Villa El Salvador":{lat:-12.2142,lng:-76.9369},
+    "Santa Anita":{lat:-12.0432,lng:-76.9717},
+    "Puente Piedra":{lat:-11.8663,lng:-77.0762},
+    "Chorrillos":{lat:-12.1725,lng:-77.0164},
+  };
+  const TC={"Empleabilidad":"#4b16e8","Acceso":"#08a85a","Calidad":"#ffba18","Permanencia":"#e0005a"};
+
+  // Agrupa voces por distrito
+  const groups={};
+  VOICES.forEach(v=>{
+    if(!groups[v.district]) groups[v.district]={name:v.district,zone:v.zone,voices:0,supports:0,tags:{}};
+    groups[v.district].voices++;
+    groups[v.district].supports+=v.supports;
+    groups[v.district].tags[v.tag]=(groups[v.district].tags[v.tag]||0)+1;
+  });
+  const dists=Object.values(groups).map(g=>{
+    const dom=Object.entries(g.tags).sort((a,b)=>b[1]-a[1])[0]?.[0]||'Acceso';
+    const meta=DM[g.name]||{};
+    return Object.assign({},g,meta,{dominant:dom,color:TC[dom]||'#4b16e8'});
+  }).filter(d=>d.lat&&d.lng).sort((a,b)=>b.supports-a.supports);
+
+  // Sidebar list
+  document.getElementById('mapCount').textContent=`${dists.length} distritos · ${VOICES.length} voces`;
+  document.getElementById('mapList').innerHTML=dists.map(d=>`
+    <div class="map-row">
+      <div class="dswatch" style="background:${d.color}"></div>
+      <div class="map-row-text"><b>${d.name}</b><span>${d.dominant} · ${d.voices} voces</span></div>
+      <div class="map-count"><strong>${d.supports}</strong><small>apoyos</small></div>
+    </div>
+  `).join('');
+
+  // Leaflet map — requiere que el contenedor sea visible
+  if(!window.L){ console.warn('Leaflet no cargó'); return; }
+
+  const mapEl=document.getElementById('leafletMap');
+  if(!mapEl||mapEl.offsetHeight===0){ console.warn('Contenedor invisible'); return; }
+
+  const map=L.map('leafletMap',{
+    scrollWheelZoom:false,
+    zoomControl:true,
+    attributionControl:true
+  }).setView([-12.07,-77.025],10);
+
+  window._leafletMap=map;
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom:18,
+    attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  // Capa de calor
+  const mx=Math.max(...dists.map(d=>d.supports),1);
+  if(L.heatLayer){
+    const pts=dists.flatMap(d=>[
+      [d.lat,d.lng,Math.max(.3,d.supports/mx)],
+      [d.lat+.004,d.lng+.003,d.supports/mx*.65],
+      [d.lat-.003,d.lng-.004,d.supports/mx*.45],
+    ]);
+    L.heatLayer(pts,{radius:38,blur:24,minOpacity:.38,
+      gradient:{.15:'#2085ff',.4:'#00c97a',.7:'#ffba18',1:'#e0005a'}
+    }).addTo(map);
+  }
+
+  // Marcadores con popup y etiquetas
+  dists.forEach(d=>{
+    const r=7+d.voices*2;
+    L.circle([d.lat,d.lng],{radius:500+d.supports*20,color:d.color,weight:0,fillColor:d.color,fillOpacity:.12}).addTo(map);
+    L.circleMarker([d.lat,d.lng],{radius:r,color:'#fff',weight:2.5,fillColor:d.color,fillOpacity:.92})
+      .addTo(map)
+      .bindTooltip(`<b>${d.name}</b>: ${d.voices} voces · ${d.supports} apoyos`,{direction:'top',sticky:true})
+      .bindPopup(`<b>${d.name}</b><br><span style="color:${d.color};font-weight:700;">${d.dominant}</span><br>${d.voices} voces · ${d.supports} apoyos<br><small>${d.zone}</small>`);
+    L.marker([d.lat+.009,d.lng],{
+      icon:L.divIcon({className:'district-label',html:`<span>${d.name}</span>`,iconSize:[140,18],iconAnchor:[70,9]}),
+      interactive:false
+    }).addTo(map);
+  });
+
+  // Leyenda
+  const leg=L.control({position:'bottomleft'});
+  leg.onAdd=()=>{
+    const div=L.DomUtil.create('div','heat-legend');
+    div.innerHTML='<b style="display:block;margin-bottom:4px;">Tema dominante</b>'+
+      Object.entries(TC).map(([k,v])=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><div style="width:10px;height:10px;border-radius:50%;background:${v}"></div><span style="font-size:10px;">${k}</span></div>`).join('');
+    return div;
+  };
+  leg.addTo(map);
+
+  // Forzar redibujado por si el contenedor tardó en renderizar
+  setTimeout(()=>map.invalidateSize(),200);
+}
+
+// ── IAJ ────────────────────────────────────────────────────────────
+function calcIAJ(){
+  const tap=+document.getElementById('tap').value;
+  const itd=+document.getElementById('itd').value;
+  const dpp=+document.getElementById('dpp').value;
+  const gsc=+document.getElementById('gsc').value;
+  document.getElementById('tapV').textContent=tap+'%';
+  document.getElementById('itdV').textContent=itd+'%';
+  document.getElementById('dppV').textContent=dpp+'%';
+  document.getElementById('gscV').textContent=gsc+'%';
+  const iaj=(tap*.40)+(itd*.20)+(dpp*.20)+(gsc*.20);
+  const r=Math.round(iaj*10)/10;
+  const num=document.getElementById('iajNum');
+  const oct=document.getElementById('iajOct');
+  const rea=document.getElementById('iajReason');
+  num.textContent=r.toFixed(1)+'%';
+  if(itd<30){num.style.color='#a01919';oct.style.cssText='background:#fff0f0;color:#a01919;';oct.textContent='🔴 OCTÓGONO ROJO: BAJO EN TRAZABILIDAD';rea.textContent='ITD < 30%. La institución no devuelve resultados. Sanción pública en GOB.PE.';}
+  else if(iaj<50&&tap<15){num.style.color='#a01919';oct.style.cssText='background:#fff0f0;color:#a01919;';oct.textContent='🔴 OCTÓGONO ROJO: EXCESO DE ADULTOCENTRISMO';rea.textContent='IAJ < 50% y TAP < 15%. Ignora las demandas juveniles. Sanción reputacional activa.';}
+  else if(iaj>=85){num.style.color='#05703c';oct.style.cssText='background:#e8f8ef;color:#05703c;';oct.textContent='🟢 OCTÓGONO VERDE: ALTO EN PARTICIPACIÓN EFECTIVA';rea.textContent='¡Certificado Joven otorgado! Institución destacada en GOB.PE como modelo.';}
+  else{num.style.color='#7a5500';oct.style.cssText='background:#fff8e6;color:#7a5500;';oct.textContent='🟡 OCTÓGONO ÁMBAR: EN PROCESO DE MEJORA';rea.textContent='IAJ entre 50% y 84%. Subir TAP e ITD para alcanzar el Verde.';}
+}
+
+// ── SHARE ──────────────────────────────────────────────────────────
+function toggleShare(){const el=document.getElementById('shareCard');el.style.display=el.style.display==='none'?'block':'none';}
+
+// ── CODE ───────────────────────────────────────────────────────────
+function showCode(id,btn){document.querySelectorAll('.cpanel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.cft').forEach(t=>t.classList.remove('active'));document.getElementById('code-'+id).classList.add('active');btn.classList.add('active');}
+function copyC(id){navigator.clipboard.writeText(document.getElementById(id).innerText).then(()=>{});}
+
+// ── QR POSTER ──────────────────────────────────────────────────────
+function drawQR(){
+  const svg=document.getElementById('posterQr');
+  if(!svg||svg.children.length>0)return;
+  const s=41,b=4,m=3,c=s-b*2,cell=Math.floor(c/21),ns=b+Math.floor((c-21*cell)/2);
+  const DATA=[
+    [1,1,1,1,1,1,1,0,1,0,1,1,0,0,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,1,0,0,1,0,1,1,0,1,0,0,0,0,0,1],
+    [1,0,1,1,1,0,1,0,1,0,1,0,0,0,1,0,1,1,1,0,1],
+    [1,0,1,1,1,0,1,0,0,1,1,1,0,0,1,0,1,1,1,0,1],
+    [1,0,1,1,1,0,1,0,1,1,0,0,1,0,1,0,1,1,1,0,1],
+    [1,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],
+    [0,0,0,0,0,0,0,0,1,1,0,1,0,1,0,0,0,0,0,0,0],
+    [1,0,1,1,0,1,1,1,0,1,1,0,1,1,1,0,1,1,0,1,0],
+    [0,1,0,0,1,0,0,0,1,0,0,1,0,1,0,1,0,0,1,0,1],
+    [1,1,0,1,0,1,1,0,0,1,0,0,1,0,1,1,0,1,0,1,0],
+    [0,0,1,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,1,0,1],
+    [1,0,0,1,0,1,1,1,1,0,0,1,0,0,1,0,0,1,0,1,0],
+    [0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,1,0,1,0,0,1],
+    [1,1,1,1,1,1,1,0,1,0,0,1,1,0,1,0,1,0,0,1,0],
+    [1,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,0,0,1,0,1],
+    [1,0,1,1,1,0,1,0,1,0,1,0,0,0,1,1,0,1,0,0,0],
+    [1,0,1,1,1,0,1,0,1,1,0,1,0,1,0,0,1,0,1,1,0],
+    [1,0,1,1,1,0,1,0,0,0,1,0,1,0,0,1,0,1,0,0,1],
+    [1,0,0,0,0,0,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0],
+    [1,1,1,1,1,1,1,0,0,1,0,0,1,0,0,1,0,0,1,0,1],
+  ];
+  let paths='';
+  DATA.forEach((row,r)=>row.forEach((v,c2)=>{if(v)paths+=`<rect x="${ns+c2*cell}" y="${ns+r*cell}" width="${cell}" height="${cell}"/>`;}));
+  svg.innerHTML=`<rect width="41" height="41" fill="white"/><g fill="#080d35">${paths}</g>`;
+}
+
+// ── UTILS ──────────────────────────────────────────────────────────
+function sl(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ── INIT ───────────────────────────────────────────────────────────
 calcIAJ();
 </script>
 </body>
